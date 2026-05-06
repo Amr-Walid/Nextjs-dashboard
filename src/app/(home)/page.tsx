@@ -21,7 +21,7 @@ export default async function Home() {
   } = getDashboardData();
 
   return (
-    <div className="space-y-6 pt-2">
+    <div className="space-y-6">
       {/* KPI Cards */}
       <AWKPICards kpis={kpis} />
 
