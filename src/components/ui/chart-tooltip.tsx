@@ -16,7 +16,7 @@ export function CustomTooltip({
       <div className="card-futuristic p-3 min-w-[120px] bg-surface-200/90 backdrop-blur-md border-surface-300">
         {label && <p className="text-content-secondary text-xs mb-2 font-medium">{label}</p>}
         <div className="flex flex-col gap-1.5">
-          {payload.map((entry, index) => (
+          {payload.map((entry: any, index: number) => (
             <div key={`item-${index}`} className="flex items-center gap-2">
               <span
                 className="w-2 h-2 rounded-full shadow-glow-sm"
