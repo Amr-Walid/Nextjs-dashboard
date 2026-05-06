@@ -1,0 +1,111 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   DESIGN TOKENS — Futuristic Light System
+   ============================================================ */
+@layer base {
+  :root {
+    /* Surfaces */
+    --surface-base: 255 255 255;
+    --surface-100: 255 248 222;
+    --surface-200: 255 242 198;
+    --surface-300: 241 245 249;
+    --surface-400: 226 232 240;
+
+    /* Palette Accents */
+    --neon-crimson: 140 169 255;
+    --neon-blue:    170 196 245;
+    --neon-cyan:    103 178 216;
+    --neon-pink:    255 113 174;
+    --neon-emerald: 16 185 129;
+    --neon-amber:   245 158 11;
+
+    /* Hex Variables for Charts */
+    --chart-crimson: #8CA9FF;
+    --chart-blue:    #AAC4F5;
+    --chart-rose:    #FFB2D9;
+    --chart-amber:   #F59E0B;
+    --chart-cyan:    #67B2D8;
+    --chart-pink:    #FF71AE;
+
+    /* Text hierarchy */
+    --text-heading:    #000000;
+    --text-body:       #1e293b;
+    --text-secondary:  #475569;
+    --text-tertiary:   #64748b;
+
+    /* Borders */
+    --border-subtle:   #f1f5f9;
+    --border-default:  #e2e8f0;
+    --border-strong:   #cbd5e1;
+
+    --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  body {
+    @apply bg-surface-base text-content antialiased selection:bg-neon-pink selection:text-white;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  /* Futuristic scrollbar */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #32364a transparent;
+  }
+  *::-webkit-scrollbar { width: 6px; height: 6px; }
+  *::-webkit-scrollbar-track { background: transparent; }
+  *::-webkit-scrollbar-thumb {
+    background: #32364a;
+    border-radius: 999px;
+  }
+}
+
+/* ============================================================
+   UTILITY CLASSES
+   ============================================================ */
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+  /* Card — futuristic surface */
+  .card-futuristic {
+    @apply rounded-2xl bg-surface-100 border border-surface-300 shadow-card
+           transition-all duration-300 relative overflow-hidden;
+  }
+  .card-futuristic:hover {
+    @apply shadow-card-hover -translate-y-px border-neon-crimson/30;
+  }
+
+  .gradient-text {
+    @apply bg-gradient-to-r from-neon-crimson to-neon-blue
+           bg-clip-text text-transparent;
+  }
+
+  /* Micro-animations */
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0);    }
+  }
+  .animate-fade-up { animation: fade-up 0.35s var(--ease-smooth) both; }
+}
+
+/* Custom Table Overrides */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide Next.js dev overlay / portal */
+nextjs-portal,
+#__next-build-watcher,
+#___next-error-overlay-suspense,
+#nextjs-dev-overlay {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}

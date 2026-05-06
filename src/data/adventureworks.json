@@ -1,0 +1,664 @@
+{
+  "kpis": {
+    "totalSales": 29358677.22,
+    "totalOrders": 27659,
+    "totalQty": 631920,
+    "totalCustomers": 18484,
+    "totalProducts": 397,
+    "avgOrderValue": 1061.45,
+    "totalProfit": 12080883.64,
+    "profitMargin": 41.15
+  },
+  "monthly": [
+    {
+      "month": "2005-07",
+      "sales": 473388.16,
+      "profit": 190967.54,
+      "orders": 146,
+      "qty": 1486
+    },
+    {
+      "month": "2005-08",
+      "sales": 506191.69,
+      "profit": 203872.52,
+      "orders": 156,
+      "qty": 1573
+    },
+    {
+      "month": "2005-09",
+      "sales": 473943.03,
+      "profit": 188489.5,
+      "orders": 146,
+      "qty": 1545
+    },
+    {
+      "month": "2005-10",
+      "sales": 513329.47,
+      "profit": 206121.74,
+      "orders": 161,
+      "qty": 1658
+    },
+    {
+      "month": "2005-11",
+      "sales": 543993.41,
+      "profit": 218924.75,
+      "orders": 169,
+      "qty": 1795
+    },
+    {
+      "month": "2005-12",
+      "sales": 755527.89,
+      "profit": 303229.82,
+      "orders": 235,
+      "qty": 2343
+    },
+    {
+      "month": "2006-01",
+      "sales": 596746.56,
+      "profit": 240320.91,
+      "orders": 188,
+      "qty": 1986
+    },
+    {
+      "month": "2006-02",
+      "sales": 550816.69,
+      "profit": 219507.52,
+      "orders": 171,
+      "qty": 1810
+    },
+    {
+      "month": "2006-03",
+      "sales": 644135.2,
+      "profit": 259370.47,
+      "orders": 199,
+      "qty": 2242
+    },
+    {
+      "month": "2006-04",
+      "sales": 663692.29,
+      "profit": 267392.11,
+      "orders": 207,
+      "qty": 2104
+    },
+    {
+      "month": "2006-05",
+      "sales": 673556.2,
+      "profit": 271926.44,
+      "orders": 214,
+      "qty": 2425
+    },
+    {
+      "month": "2006-06",
+      "sales": 676763.65,
+      "profit": 273032.24,
+      "orders": 214,
+      "qty": 2239
+    },
+    {
+      "month": "2006-07",
+      "sales": 500365.15,
+      "profit": 202013.05,
+      "orders": 253,
+      "qty": 2632
+    },
+    {
+      "month": "2006-08",
+      "sales": 546001.47,
+      "profit": 221445.75,
+      "orders": 281,
+      "qty": 2915
+    },
+    {
+      "month": "2006-09",
+      "sales": 350466.99,
+      "profit": 142096.9,
+      "orders": 198,
+      "qty": 2177
+    },
+    {
+      "month": "2006-10",
+      "sales": 415390.23,
+      "profit": 172136.18,
+      "orders": 229,
+      "qty": 2349
+    },
+    {
+      "month": "2006-11",
+      "sales": 335095.09,
+      "profit": 136436.67,
+      "orders": 193,
+      "qty": 2044
+    },
+    {
+      "month": "2006-12",
+      "sales": 577314.0,
+      "profit": 241171.9,
+      "orders": 330,
+      "qty": 3490
+    },
+    {
+      "month": "2007-01",
+      "sales": 438865.17,
+      "profit": 183728.21,
+      "orders": 244,
+      "qty": 2506
+    },
+    {
+      "month": "2007-02",
+      "sales": 489090.34,
+      "profit": 205186.47,
+      "orders": 272,
+      "qty": 2752
+    },
+    {
+      "month": "2007-03",
+      "sales": 485574.79,
+      "profit": 203897.06,
+      "orders": 272,
+      "qty": 2837
+    },
+    {
+      "month": "2007-04",
+      "sales": 506399.27,
+      "profit": 212618.1,
+      "orders": 294,
+      "qty": 3141
+    },
+    {
+      "month": "2007-05",
+      "sales": 562772.56,
+      "profit": 238672.3,
+      "orders": 335,
+      "qty": 3378
+    },
+    {
+      "month": "2007-06",
+      "sales": 554799.23,
+      "profit": 235050.71,
+      "orders": 321,
+      "qty": 3258
+    },
+    {
+      "month": "2007-07",
+      "sales": 886668.84,
+      "profit": 362115.15,
+      "orders": 1411,
+      "qty": 15080
+    },
+    {
+      "month": "2007-08",
+      "sales": 847413.51,
+      "profit": 353404.12,
+      "orders": 3819,
+      "qty": 40257
+    },
+    {
+      "month": "2007-09",
+      "sales": 1010258.13,
+      "profit": 420575.21,
+      "orders": 3885,
+      "qty": 40644
+    },
+    {
+      "month": "2007-10",
+      "sales": 1080449.58,
+      "profit": 449117.1,
+      "orders": 4146,
+      "qty": 43473
+    },
+    {
+      "month": "2007-11",
+      "sales": 1196981.11,
+      "profit": 496559.43,
+      "orders": 4174,
+      "qty": 43307
+    },
+    {
+      "month": "2007-12",
+      "sales": 1731787.77,
+      "profit": 711809.27,
+      "orders": 5270,
+      "qty": 55082
+    },
+    {
+      "month": "2008-01",
+      "sales": 1340244.95,
+      "profit": 554959.02,
+      "orders": 4585,
+      "qty": 47802
+    },
+    {
+      "month": "2008-02",
+      "sales": 1462479.83,
+      "profit": 604917.12,
+      "orders": 4616,
+      "qty": 48263
+    },
+    {
+      "month": "2008-03",
+      "sales": 1480905.18,
+      "profit": 612934.29,
+      "orders": 4707,
+      "qty": 48910
+    },
+    {
+      "month": "2008-04",
+      "sales": 1608750.53,
+      "profit": 662243.34,
+      "orders": 5088,
+      "qty": 53798
+    },
+    {
+      "month": "2008-05",
+      "sales": 1878317.51,
+      "profit": 779974.15,
+      "orders": 5515,
+      "qty": 57585
+    },
+    {
+      "month": "2008-06",
+      "sales": 1949361.11,
+      "profit": 806300.87,
+      "orders": 5545,
+      "qty": 58279
+    },
+    {
+      "month": "2008-07",
+      "sales": 50840.63,
+      "profit": 28365.72,
+      "orders": 2209,
+      "qty": 22755
+    }
+  ],
+  "quarterly": [
+    {
+      "quarter": "2005-Q3",
+      "sales": 1453522.89,
+      "profit": 583329.56,
+      "orders": 448
+    },
+    {
+      "quarter": "2005-Q4",
+      "sales": 1812850.77,
+      "profit": 728276.31,
+      "orders": 565
+    },
+    {
+      "quarter": "2006-Q1",
+      "sales": 1791698.45,
+      "profit": 719198.9,
+      "orders": 558
+    },
+    {
+      "quarter": "2006-Q2",
+      "sales": 2014012.13,
+      "profit": 812350.79,
+      "orders": 635
+    },
+    {
+      "quarter": "2006-Q3",
+      "sales": 1396833.62,
+      "profit": 565555.7,
+      "orders": 732
+    },
+    {
+      "quarter": "2006-Q4",
+      "sales": 1327799.32,
+      "profit": 549744.76,
+      "orders": 752
+    },
+    {
+      "quarter": "2007-Q1",
+      "sales": 1413530.3,
+      "profit": 592811.74,
+      "orders": 788
+    },
+    {
+      "quarter": "2007-Q2",
+      "sales": 1623971.06,
+      "profit": 686341.11,
+      "orders": 950
+    },
+    {
+      "quarter": "2007-Q3",
+      "sales": 2744340.48,
+      "profit": 1136094.47,
+      "orders": 9115
+    },
+    {
+      "quarter": "2007-Q4",
+      "sales": 4009218.46,
+      "profit": 1657485.8,
+      "orders": 13590
+    },
+    {
+      "quarter": "2008-Q1",
+      "sales": 4283629.96,
+      "profit": 1772810.43,
+      "orders": 13908
+    },
+    {
+      "quarter": "2008-Q2",
+      "sales": 5436429.15,
+      "profit": 2248518.36,
+      "orders": 16148
+    },
+    {
+      "quarter": "2008-Q3",
+      "sales": 50840.63,
+      "profit": 28365.72,
+      "orders": 2209
+    }
+  ],
+  "yearly": [
+    {
+      "year": "2005",
+      "sales": 3266373.66,
+      "profit": 1311605.87,
+      "orders": 1013,
+      "qty": 10400,
+      "customers": 1013
+    },
+    {
+      "year": "2006",
+      "sales": 6530343.53,
+      "profit": 2646850.15,
+      "orders": 2677,
+      "qty": 28413,
+      "customers": 2677
+    },
+    {
+      "year": "2007",
+      "sales": 9791060.3,
+      "profit": 4072733.12,
+      "orders": 24443,
+      "qty": 255715,
+      "customers": 9309
+    },
+    {
+      "year": "2008",
+      "sales": 9770899.74,
+      "profit": 4049694.5,
+      "orders": 32265,
+      "qty": 337392,
+      "customers": 11377
+    }
+  ],
+  "topProducts": [
+    {
+      "name": "Mountain-200",
+      "listPrice": 2071.42,
+      "sales": 7929475.24,
+      "profit": 3616725.49,
+      "profitMargin": 45.6,
+      "qty": 36629,
+      "orders": 3552
+    },
+    {
+      "name": "Road-150",
+      "listPrice": 3578.27,
+      "sales": 5549896.77,
+      "profit": 2182219.47,
+      "profitMargin": 39.3,
+      "qty": 16187,
+      "orders": 1551
+    },
+    {
+      "name": "Road-250",
+      "listPrice": 2443.35,
+      "sales": 4451260.13,
+      "profit": 1685641.36,
+      "profitMargin": 37.9,
+      "qty": 19793,
+      "orders": 1903
+    },
+    {
+      "name": "Touring-1000",
+      "listPrice": 2384.07,
+      "sales": 2992007.85,
+      "profit": 1132175.79,
+      "profitMargin": 37.8,
+      "qty": 13444,
+      "orders": 1255
+    },
+    {
+      "name": "Road-350-W",
+      "listPrice": 1700.99,
+      "sales": 1580219.71,
+      "profit": 574567.92,
+      "profitMargin": 36.4,
+      "qty": 9993,
+      "orders": 929
+    },
+    {
+      "name": "Road-550-W",
+      "listPrice": 1120.49,
+      "sales": 1514622.36,
+      "profit": 561794.16,
+      "profitMargin": 37.1,
+      "qty": 14436,
+      "orders": 1390
+    },
+    {
+      "name": "Mountain-100",
+      "listPrice": 3399.99,
+      "sales": 1341121.04,
+      "profit": 586874.56,
+      "profitMargin": 43.8,
+      "qty": 4209,
+      "orders": 396
+    },
+    {
+      "name": "Road-750",
+      "listPrice": 539.99,
+      "sales": 779205.57,
+      "profit": 283319.2,
+      "profitMargin": 36.4,
+      "qty": 15072,
+      "orders": 1443
+    },
+    {
+      "name": "Road-650",
+      "listPrice": 699.1,
+      "sales": 645379.5,
+      "profit": 249757.6,
+      "profitMargin": 38.7,
+      "qty": 9164,
+      "orders": 852
+    },
+    {
+      "name": "Touring-2000",
+      "listPrice": 1214.85,
+      "sales": 451924.2,
+      "profit": 171008.1,
+      "profitMargin": 37.8,
+      "qty": 3928,
+      "orders": 372
+    },
+    {
+      "name": "Mountain-400-W",
+      "listPrice": 769.49,
+      "sales": 417833.07,
+      "profit": 189893.4,
+      "profitMargin": 45.4,
+      "qty": 5760,
+      "orders": 543
+    },
+    {
+      "name": "Touring-3000",
+      "listPrice": 742.35,
+      "sales": 400869.0,
+      "profit": 151688.81,
+      "profitMargin": 37.8,
+      "qty": 5620,
+      "orders": 540
+    },
+    {
+      "name": "Mountain-500",
+      "listPrice": 564.99,
+      "sales": 264330.21,
+      "profit": 120130.66,
+      "profitMargin": 45.4,
+      "qty": 4884,
+      "orders": 479
+    },
+    {
+      "name": "Sport-100",
+      "listPrice": 34.99,
+      "sales": 225335.6,
+      "profit": 141059.83,
+      "profitMargin": 62.6,
+      "qty": 66628,
+      "orders": 6440
+    },
+    {
+      "name": "Long-Sleeve Logo Jersey",
+      "listPrice": 49.99,
+      "sales": 86782.64,
+      "profit": 19960.01,
+      "profitMargin": 23.0,
+      "qty": 18500,
+      "orders": 1736
+    }
+  ],
+  "territories": [
+    {
+      "key": 9,
+      "region": "Australia",
+      "country": "Australia",
+      "group": "Pacific",
+      "sales": 9061000.58,
+      "profit": 3685855.08,
+      "orders": 13345
+    },
+    {
+      "key": 4,
+      "region": "Southwest",
+      "country": "United States",
+      "group": "North America",
+      "sales": 5718150.81,
+      "profit": 2371763.4,
+      "orders": 12265
+    },
+    {
+      "key": 1,
+      "region": "Northwest",
+      "country": "United States",
+      "group": "North America",
+      "sales": 3649866.55,
+      "profit": 1519631.3,
+      "orders": 8993
+    },
+    {
+      "key": 10,
+      "region": "United Kingdom",
+      "country": "United Kingdom",
+      "group": "Europe",
+      "sales": 3391712.21,
+      "profit": 1390490.78,
+      "orders": 6906
+    },
+    {
+      "key": 8,
+      "region": "Germany",
+      "country": "Germany",
+      "group": "Europe",
+      "sales": 2894312.34,
+      "profit": 1187370.77,
+      "orders": 5625
+    },
+    {
+      "key": 7,
+      "region": "France",
+      "country": "France",
+      "group": "Europe",
+      "sales": 2644017.71,
+      "profit": 1086264.72,
+      "orders": 5558
+    },
+    {
+      "key": 6,
+      "region": "Canada",
+      "country": "Canada",
+      "group": "North America",
+      "sales": 1977844.86,
+      "profit": 829921.5,
+      "orders": 7620
+    },
+    {
+      "key": 5,
+      "region": "Southeast",
+      "country": "United States",
+      "group": "North America",
+      "sales": 12238.85,
+      "profit": 5332.43,
+      "orders": 39
+    },
+    {
+      "key": 2,
+      "region": "Northeast",
+      "country": "United States",
+      "group": "North America",
+      "sales": 6532.47,
+      "profit": 2902.76,
+      "orders": 27
+    },
+    {
+      "key": 3,
+      "region": "Central",
+      "country": "United States",
+      "group": "North America",
+      "sales": 3000.83,
+      "profit": 1350.92,
+      "orders": 20
+    }
+  ],
+  "groups": [
+    {
+      "group": "North America",
+      "sales": 11367634.37,
+      "profit": 4730902.3,
+      "orders": 28964
+    },
+    {
+      "group": "Pacific",
+      "sales": 9061000.58,
+      "profit": 3685855.08,
+      "orders": 13345
+    },
+    {
+      "group": "Europe",
+      "sales": 8930042.26,
+      "profit": 3664126.26,
+      "orders": 18089
+    }
+  ],
+  "customerIncome": [
+    {
+      "label": "70k - 100k",
+      "count": 4533
+    },
+    {
+      "label": "40k - 70k",
+      "count": 6544
+    },
+    {
+      "label": "أكثر من 100k",
+      "count": 2198
+    },
+    {
+      "label": "أقل من 40k",
+      "count": 5209
+    }
+  ],
+  "customerGender": [
+    {
+      "label": "ذكر",
+      "count": 9351
+    },
+    {
+      "label": "أنثى",
+      "count": 9133
+    }
+  ]
+}
