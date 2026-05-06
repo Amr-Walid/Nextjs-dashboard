@@ -26,7 +26,7 @@ export function AWYearlyStats({ yearlyData }: { yearlyData: YearlyData[] }) {
       </div>
 
       {/* Quick stats row */}
-      <div className="grid grid-cols-2 gap-3 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
         {yearlyData.map((y, index) => (
           <div
             key={y.year}

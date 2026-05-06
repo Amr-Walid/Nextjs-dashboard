@@ -35,15 +35,15 @@ export function AWRegionChart({ groups }: { groups: GroupData[] }) {
       </div>
 
       <div className="flex-1 flex flex-col justify-center">
-        <div className="relative mb-4 flex justify-center items-center h-[220px]">
+        <div className="relative mb-4 flex justify-center items-center h-[200px] sm:h-[220px]">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
                 data={chartData}
                 cx="50%"
                 cy="50%"
-                innerRadius={65}
-                outerRadius={95}
+                innerRadius={55}
+                outerRadius={85}
                 paddingAngle={5}
                 dataKey="value"
                 stroke="none"

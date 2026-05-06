@@ -44,7 +44,7 @@ export function SalesQuarterlyChart({ data }: { data: QuarterlyData[] }) {
         <p className="text-sm font-medium text-neon-pink">إيرادات وأرباح كل ربع سنة</p>
       </div>
 
-      <div className="h-[600px] w-full" dir="ltr">
+      <div className="h-[350px] sm:h-[600px] w-full" dir="ltr">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart 
             data={data} 

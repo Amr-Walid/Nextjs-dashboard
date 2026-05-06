@@ -46,7 +46,7 @@ export function AWRevenueChart({ data }: { data: RevenueData }) {
         </div>
       </div>
       
-      <div className="h-[310px] w-full" dir="ltr">
+      <div className="h-[250px] sm:h-[310px] w-full" dir="ltr">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart
             data={chartData}
