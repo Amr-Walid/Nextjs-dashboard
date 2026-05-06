@@ -38,7 +38,7 @@ export default function RootLayout({ children }: PropsWithChildren) {
             <div className="flex w-full min-w-0 flex-col bg-surface-base">
               <Header />
 
-              <main className="mx-auto w-full max-w-screen-2xl flex-1 overflow-hidden p-4 md:p-6 2xl:p-10">
+              <main className="mx-auto w-full max-w-screen-2xl flex-1 p-4 md:p-6 2xl:p-10">
                 {children}
               </main>
             </div>
