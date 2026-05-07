@@ -132,7 +132,7 @@ export function AWCustomerChart({
           <span>{value === "All" ? (isYear ? "السنة" : "المنطقة") : (isYear ? value : REGION_LABELS[value])}</span>
           <ChevronDown className={cn("size-3 opacity-50 transition-transform duration-300", openDropdown === openKey && "rotate-180")} />
         </DropdownTrigger>
-        <DropdownContent align="end" className="mt-2 bg-surface-100/95 backdrop-blur-xl border border-surface-300 shadow-2xl p-1.5 min-w-[150px] z-[9999] rounded-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+        <DropdownContent align="start" className="mt-2 bg-surface-100/95 backdrop-blur-xl border border-surface-300 shadow-2xl p-1.5 min-w-[150px] z-[9999] rounded-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
           <div className="px-3 py-1.5 mb-1 text-[10px] font-black text-content-tertiary uppercase tracking-widest border-b border-surface-200">اختر {isYear ? "السنة" : "المنطقة"}</div>
           {options.map((opt: string) => (
             <button

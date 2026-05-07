@@ -75,7 +75,7 @@ export function AWTopProducts({
           <span>{value === "All" ? (isYear ? "السنة" : "المنطقة") : (isYear ? value : REGION_LABELS[value])}</span>
           <ChevronDown className={cn("size-2.5 transition-transform", openDropdown === openKey && "rotate-180")} />
         </DropdownTrigger>
-        <DropdownContent align="end" className="mt-2 bg-surface-100/95 backdrop-blur-xl border border-surface-300 shadow-2xl p-1 min-w-[130px] z-[9999] rounded-xl overflow-hidden">
+        <DropdownContent align="start" className="mt-2 bg-surface-100/95 backdrop-blur-xl border border-surface-300 shadow-2xl p-1 min-w-[130px] z-[9999] rounded-xl overflow-hidden">
           {options.map((opt: string) => (
             <button
               key={opt}

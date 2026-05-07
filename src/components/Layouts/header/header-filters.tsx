@@ -44,7 +44,7 @@ export function HeaderFilters() {
           <span>{filters.region === "All" ? "المنطقة" : REGION_LABELS[filters.region]}</span>
           <ChevronDown className={cn("size-3 opacity-50 transition-transform duration-300", openDropdown === "region" && "rotate-180")} />
         </DropdownTrigger>
-        <DropdownContent align="start" className="mt-2 bg-surface-100/95 backdrop-blur-xl border border-surface-300 shadow-2xl p-1.5 min-w-[160px] z-[9999] rounded-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+        <DropdownContent align="end" className="mt-2 bg-surface-100/95 backdrop-blur-xl border border-surface-300 shadow-2xl p-1.5 min-w-[160px] z-[9999] rounded-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
           <div className="px-3 py-1.5 mb-1 text-[10px] font-black text-content-tertiary uppercase tracking-widest border-b border-surface-200">اختر المنطقة</div>
           {REGIONS.map((r) => (
             <button
@@ -76,7 +76,7 @@ export function HeaderFilters() {
           <span>{filters.year === "All" ? "السنة" : filters.year}</span>
           <ChevronDown className={cn("size-3 opacity-50 transition-transform duration-300", openDropdown === "year" && "rotate-180")} />
         </DropdownTrigger>
-        <DropdownContent align="start" className="mt-2 bg-surface-100/95 backdrop-blur-xl border border-surface-300 shadow-2xl p-1.5 min-w-[140px] z-[9999] rounded-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+        <DropdownContent align="end" className="mt-2 bg-surface-100/95 backdrop-blur-xl border border-surface-300 shadow-2xl p-1.5 min-w-[140px] z-[9999] rounded-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
           <div className="px-3 py-1.5 mb-1 text-[10px] font-black text-content-tertiary uppercase tracking-widest border-b border-surface-200">اختر السنة</div>
           {YEARS.map((y) => (
             <button
