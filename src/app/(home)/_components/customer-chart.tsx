@@ -191,8 +191,8 @@ export function AWCustomerChart({
                     dataKey="value"
                     stroke="none"
                   >
-                    <Cell fill="var(--chart-pink)" />
                     <Cell fill="var(--chart-blue)" />
+                    <Cell fill="var(--chart-pink)" />
                   </Pie>
                   <Tooltip content={<CustomTooltip formatter={(v: any) => `${v.toLocaleString()} عميل`} />} />
                 </PieChart>
@@ -211,7 +211,7 @@ export function AWCustomerChart({
                   <div className="flex items-center gap-3">
                     <div className={cn(
                       "h-3 w-3 rounded-full",
-                      i === 0 ? 'bg-neon-pink' : 'bg-neon-blue'
+                      i === 0 ? 'bg-neon-blue' : 'bg-neon-pink'
                     )} />
                     <span className="text-sm font-bold text-content-secondary">{g.label}</span>
                   </div>
