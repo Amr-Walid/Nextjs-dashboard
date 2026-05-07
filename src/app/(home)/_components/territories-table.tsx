@@ -55,7 +55,7 @@ export function TerritoriesTable({
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-surface-300">
-              {["المنطقة", "الدولة", "المجموعة", "الإيرادات", "الطلبات", "النسبة"].map((h) => (
+              {["الدولة", "المجموعة", "الإيرادات", "الطلبات", "النسبة"].map((h) => (
                 <th
                   key={h}
                   className="pb-4 text-right font-bold text-content-tertiary text-xs uppercase tracking-widest"
@@ -74,9 +74,6 @@ export function TerritoriesTable({
                   className="transition-colors hover:bg-surface-300/20 group animate-fade-up"
                 >
                   <td className="py-4 pr-2 font-bold text-content group-hover:text-neon-pink transition-colors">
-                    {t.region}
-                  </td>
-                  <td className="py-4 pr-2 text-content-secondary font-medium">
                     {t.country}
                   </td>
                   <td className="py-4 pr-2">
