@@ -1,7 +1,7 @@
 "use client";
 import { useMemo, useState } from "react";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
-import type { GroupData } from "@/services/adventureworks.service";
+import type { GroupData, YearlyData } from "@/services/adventureworks.service";
 import { CustomTooltip } from "@/components/ui/chart-tooltip";
 import { useFilters } from "@/context/FilterContext";
 import { cn } from "@/lib/utils";
