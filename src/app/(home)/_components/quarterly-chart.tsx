@@ -13,6 +13,15 @@ import {
 import type { QuarterlyData, TerritoryData } from "@/services/adventureworks.service";
 import { useFilters } from "@/context/FilterContext";
 import { LocalFilterGroup } from "@/components/ui/local-filter-group";
+import { cn } from "@/lib/utils";
+import { CustomTooltip } from "@/components/ui/chart-tooltip";
+
+const REGION_LABELS: Record<string, string> = {
+  "All": "كل المناطق",
+  "North America": "أمريكا الشمالية",
+  "Europe": "أوروبا",
+  "Pacific": "المحيط الهادي"
+};
 
 export function SalesQuarterlyChart({ 
   data, 
