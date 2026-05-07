@@ -70,9 +70,9 @@ export function AWYearlyStats({
     )}>
       <div className="mb-6 flex justify-between items-center gap-4">
         <div>
-          <h3 className="text-base font-bold text-content mb-1">
+          <h2 className="text-base font-bold text-content mb-1">
             المقارنة السنوية
-          </h3>
+          </h2>
           <p className="text-xs font-medium text-neon-pink">
             الإيرادات والأرباح سنة بسنة
           </p>

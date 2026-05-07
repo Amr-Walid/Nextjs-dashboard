@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useSidebarContext } from "./sidebar-context";
 
 const menuItemBaseStyles = cva(
-  "group relative flex items-center gap-3 rounded-xl px-4 py-2.5 text-[14px] font-medium text-content-secondary transition-all duration-300",
+  "group relative flex items-center gap-3 rounded-xl px-4 py-2.5 text-[14px] font-medium text-content-secondary transition-all duration-300 outline-none focus-visible:ring-2 focus-visible:ring-neon-blue",
   {
     variants: {
       isActive: {
@@ -31,6 +31,8 @@ export function MenuItem(
     return (
       <Link
         href={props.href}
+        role="menuitem"
+        aria-current={props.isActive ? "page" : undefined}
         // Close sidebar on clicking link if it's mobile
         onClick={() => isMobile && toggleSidebar()}
         className={cn(
@@ -49,6 +51,7 @@ export function MenuItem(
   return (
     <button
       onClick={props.onClick}
+      role="menuitem"
       aria-expanded={props.isActive}
       className={menuItemBaseStyles({
         isActive: props.isActive,

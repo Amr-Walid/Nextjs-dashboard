@@ -1,12 +1,15 @@
 import { getDashboardData } from "@/services/adventureworks.service";
+import dynamic from "next/dynamic";
 import { AWKPICards } from "./_components/kpi-cards";
-import { AWTopProducts } from "./_components/top-products-table";
 import { TerritoriesTable } from "./_components/territories-table";
-import { AWRevenueChart } from "./_components/revenue-chart";
-import { AWRegionChart } from "./_components/region-chart";
-import { AWCustomerChart } from "./_components/customer-chart";
-import { AWYearlyStats } from "./_components/yearly-stats";
-import { SalesQuarterlyChart } from "./_components/quarterly-chart";
+
+// Lazy load heavy chart components for better TBT and performance
+const AWTopProducts = dynamic(() => import("./_components/top-products-table").then(mod => mod.AWTopProducts), { ssr: false });
+const AWRevenueChart = dynamic(() => import("./_components/revenue-chart").then(mod => mod.AWRevenueChart), { ssr: false });
+const AWRegionChart = dynamic(() => import("./_components/region-chart").then(mod => mod.AWRegionChart), { ssr: false });
+const AWCustomerChart = dynamic(() => import("./_components/customer-chart").then(mod => mod.AWCustomerChart), { ssr: false });
+const AWYearlyStats = dynamic(() => import("./_components/yearly-stats").then(mod => mod.AWYearlyStats), { ssr: false });
+const SalesQuarterlyChart = dynamic(() => import("./_components/quarterly-chart").then(mod => mod.SalesQuarterlyChart), { ssr: false });
 
 export default async function Home() {
   const {

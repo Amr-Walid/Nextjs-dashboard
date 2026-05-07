@@ -85,14 +85,14 @@ export function AWRevenueChart({
       <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex flex-col gap-2">
           <div>
-            <h3 className="text-base font-bold text-content tracking-wide flex items-center gap-2">
+            <h2 className="text-base font-bold text-content tracking-wide flex items-center gap-2">
               اتجاه الإيرادات والأرباح
               {filters.region !== "All" && (
                 <span className="text-[10px] px-2 py-0.5 rounded-full bg-neon-blue/20 text-neon-blue border border-neon-blue/30">
                   {REGION_LABELS[filters.region]}
                 </span>
               )}
-            </h3>
+            </h2>
             <p className="text-xs font-medium text-neon-pink">
               عرض البيانات لآخر {range === 24 ? "سنتين" : range === 12 ? "سنة" : "6 أشهر"}
             </p>

@@ -64,7 +64,7 @@ export function AWTopProducts({
       <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <h3 className="text-base font-bold text-content">أفضل المنتجات مبيعاً</h3>
+            <h2 className="text-base font-bold text-content">أفضل المنتجات مبيعاً</h2>
             {(globalFilters.year !== "All" || globalFilters.region !== "All") && (
               <span className="text-[9px] px-1.5 py-0.5 rounded-md bg-neon-blue/10 text-neon-blue border border-neon-blue/20 font-bold">
                 {globalFilters.year !== "All" ? globalFilters.year : ""} {globalFilters.region !== "All" ? REGION_LABELS[globalFilters.region] : ""}

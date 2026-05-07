@@ -80,7 +80,7 @@ export function AWRegionChart({
       <div className="mb-4 flex flex-col gap-4">
         <div className="flex justify-between items-start">
           <div>
-            <h3 className="text-base font-bold text-content">توزيع المناطق</h3>
+            <h2 className="text-base font-bold text-content">توزيع المناطق</h2>
             <p className="text-[10px] font-medium text-neon-pink uppercase tracking-wider">تحليل {metric === "sales" ? "المبيعات" : metric === "profit" ? "الأرباح" : "الطلبات"}</p>
           </div>
           <div className="flex bg-surface-200 p-1 rounded-lg border border-surface-300">
@@ -163,5 +163,3 @@ export function AWRegionChart({
     </div>
   );
 }
-
-

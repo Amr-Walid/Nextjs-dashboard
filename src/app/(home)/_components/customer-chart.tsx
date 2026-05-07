@@ -101,7 +101,7 @@ export function AWCustomerChart({
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <h3 className="text-sm font-black text-content">توزيع الدخل</h3>
+                  <h2 className="text-sm font-black text-content">توزيع الدخل</h2>
                   {(filters.year !== "All" || filters.region !== "All") && (
                     <span className="text-[9px] px-1.5 py-0.5 rounded bg-blue-50 text-neon-blue font-bold">
                       {filters.year !== "All" ? filters.year : ""} {filters.region !== "All" ? REGION_LABELS[filters.region] : ""}
@@ -158,7 +158,7 @@ export function AWCustomerChart({
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <h3 className="text-sm font-black text-content">توزيع النوع</h3>
+                  <h2 className="text-sm font-black text-content">توزيع النوع</h2>
                   {(filters.year !== "All" || filters.region !== "All") && (
                     <span className="text-[9px] px-1.5 py-0.5 rounded bg-pink-50 text-neon-pink font-bold">
                       {filters.year !== "All" ? filters.year : ""} {filters.region !== "All" ? REGION_LABELS[filters.region] : ""}
