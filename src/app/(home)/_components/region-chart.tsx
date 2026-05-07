@@ -83,7 +83,7 @@ export function AWRegionChart({
             <h3 className="text-base font-bold text-content">توزيع المناطق</h3>
             <p className="text-[10px] font-medium text-neon-pink uppercase tracking-wider">تحليل {metric === "sales" ? "المبيعات" : metric === "profit" ? "الأرباح" : "الطلبات"}</p>
           </div>
-          <div className="flex bg-surface-300/50 p-1 rounded-xl border border-surface-300">
+          <div className="flex bg-surface-200 p-1 rounded-lg border border-surface-300">
             {[
               { id: "sales", label: "مبيعات" },
               { id: "profit", label: "أرباح" },
@@ -93,10 +93,10 @@ export function AWRegionChart({
                 key={m.id}
                 onClick={() => setMetric(m.id as any)}
                 className={cn(
-                  "px-2.5 py-1 text-[10px] font-bold rounded-lg transition-all duration-300",
+                  "px-2.5 py-1 text-[10px] font-bold rounded-md transition-all duration-300",
                   metric === m.id 
-                    ? "bg-neon-blue text-white shadow-glow-blue" 
-                    : "text-content-tertiary hover:text-content"
+                    ? "bg-neon-blue text-white shadow-sm" 
+                    : "text-content-tertiary hover:text-content hover:bg-surface-300"
                 )}
               >
                 {m.label}
@@ -143,13 +143,12 @@ export function AWRegionChart({
         <div className="flex flex-col gap-2.5">
           {filteredGroups.map((group, index) => {
             const colors = ["bg-neon-pink", "bg-neon-blue", "bg-neon-amber", "bg-neon-cyan"];
-            const glowColors = ["shadow-glow-pink", "shadow-glow-blue", "shadow-glow-amber", "shadow-glow-cyan"];
             const pct = totalValue > 0 ? ((group[metric] / totalValue) * 100) : 0;
             const label = REGION_LABELS[group.group] ?? group.group;
             return (
-              <div key={group.group} className="flex items-center justify-between p-2 rounded-xl bg-surface-300/20 border border-transparent hover:border-surface-300 transition-all duration-300">
+              <div key={group.group} className="flex items-center justify-between p-2 rounded-xl bg-surface-200/50 border border-transparent hover:border-surface-300 transition-all duration-300">
                 <div className="flex items-center gap-2">
-                  <span className={`h-2 w-2 rounded-full ${colors[index % colors.length]} ${glowColors[index % glowColors.length]}`} />
+                  <span className={`h-2.5 w-2.5 rounded-full ${colors[index % colors.length]}`} />
                   <span className="text-xs font-bold text-content-body">{label}</span>
                 </div>
                 <div className="flex items-center gap-2">

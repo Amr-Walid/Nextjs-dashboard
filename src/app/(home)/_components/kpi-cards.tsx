@@ -97,36 +97,32 @@ export function AWKPICards({
       value: fmt(currentKPIs.totalSales),
       sub: `متوسط الطلب ${fmt(currentKPIs.avgOrderValue)}`,
       icon: <DollarSign size={20} />,
-      accent: "bg-gradient-to-r from-neon-crimson to-transparent",
-      hoverGlow: "hover:shadow-glow-crimson hover:border-neon-crimson/50",
-      iconBg: "bg-surface-300 text-neon-crimson shadow-glow-crimson",
+      accent: "bg-neon-blue",
+      iconBg: "bg-blue-50 text-neon-blue",
     },
     {
       title: "إجمالي الأرباح",
       value: fmt(currentKPIs.totalProfit),
       sub: `هامش الربح ${currentKPIs.profitMargin.toFixed(1)}%`,
       icon: <TrendingUp size={20} />,
-      accent: "bg-gradient-to-r from-neon-blue to-transparent",
-      hoverGlow: "hover:shadow-glow-blue hover:border-neon-blue/50",
-      iconBg: "bg-surface-300 text-neon-blue shadow-glow-blue",
+      accent: "bg-neon-emerald",
+      iconBg: "bg-emerald-50 text-neon-emerald",
     },
     {
       title: "إجمالي الطلبات",
       value: fmtNum(currentKPIs.totalOrders),
       sub: `${fmtNum(currentKPIs.totalQty)} وحدة مباعة`,
       icon: <Package size={20} />,
-      accent: "bg-gradient-to-r from-neon-amber to-transparent",
-      hoverGlow: "hover:shadow-glow-amber hover:border-neon-amber/50",
-      iconBg: "bg-surface-300 text-neon-amber shadow-glow-amber",
+      accent: "bg-neon-amber",
+      iconBg: "bg-amber-50 text-neon-amber",
     },
     {
       title: "هامش الربح",
       value: `${currentKPIs.profitMargin.toFixed(1)}%`,
       sub: `إجمالي ${fmtNum(currentKPIs.totalCustomers)} عميل`,
       icon: <Percent size={20} />,
-      accent: "bg-gradient-to-r from-neon-amber to-transparent",
-      hoverGlow: "hover:shadow-glow-amber hover:border-neon-amber/50",
-      iconBg: "bg-surface-300 text-neon-amber shadow-glow-amber",
+      accent: "bg-neon-pink",
+      iconBg: "bg-pink-50 text-neon-pink",
     },
   ];
 
@@ -136,36 +132,35 @@ export function AWKPICards({
         <div
           key={c.title}
           className={cn(
-            "group relative overflow-hidden rounded-2xl border border-surface-300 bg-surface-200 p-5 shadow-card transition-all duration-500",
-            c.hoverGlow,
+            "group relative overflow-hidden rounded-2xl border border-surface-200 bg-surface-100 p-5 shadow-sm transition-all duration-300 hover:shadow-md",
             isPending && "scale-[0.97] opacity-80 blur-[0.5px]"
           )}
         >
-          {/* Top accent bar */}
-          <div className={cn("absolute inset-x-0 top-0 h-0.5 opacity-80", c.accent)} />
+          {/* Top accent bar - slim and elegant */}
+          <div className={cn("absolute inset-x-0 top-0 h-1", c.accent)} />
 
           <div className="flex items-start justify-between">
             <div className="flex-1 min-w-0">
-              <p className="mb-1 text-xs font-medium text-content-secondary truncate">
+              <p className="mb-1 text-xs font-semibold text-content-secondary uppercase tracking-wider">
                 {c.title}
               </p>
               <div className="flex items-baseline gap-1.5">
-                <p className="text-2xl font-bold tracking-tight text-content">
+                <p className="text-2xl font-black tracking-tight text-content">
                   {c.value}
                 </p>
                 {(filters.year !== "All" || filters.region !== "All") && (
-                  <span className="text-[9px] font-bold text-neon-pink uppercase whitespace-nowrap">
-                    في {filters.year !== "All" ? filters.year : ""} {filters.region !== "All" ? REGION_LABELS[filters.region] : ""}
+                  <span className="text-[9px] font-bold text-neon-blue uppercase whitespace-nowrap bg-blue-50 px-1.5 py-0.5 rounded">
+                    {filters.year !== "All" ? filters.year : ""} {filters.region !== "All" ? REGION_LABELS[filters.region] : ""}
                   </span>
                 )}
               </div>
-              <p className="mt-1.5 text-[11px] text-content-tertiary truncate">
+              <p className="mt-1.5 text-[11px] font-medium text-content-tertiary truncate">
                 {c.sub}
               </p>
             </div>
 
             <div className={cn(
-              "ml-3 flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl transition-transform duration-300 group-hover:scale-110",
+              "ml-3 flex h-11 w-11 shrink-0 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-105",
               c.iconBg
             )}>
               {c.icon}

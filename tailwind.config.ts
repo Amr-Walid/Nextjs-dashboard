@@ -242,24 +242,24 @@ const config: Config = {
         12: "12px",
       },
       boxShadow: {
-        /* ─── Futuristic Shadows (Simplified for Performance) ─── */
-        xs:   "0px 1px 2px 0px rgba(0,0,0,0.3)",
-        sm:   "0px 2px 4px 0px rgba(0,0,0,0.3)",
-        md:   "0px 4px 8px -2px rgba(0,0,0,0.4)",
-        lg:   "0px 8px 16px -4px rgba(0,0,0,0.5)",
-        xl:   "0px 16px 32px -8px rgba(0,0,0,0.6)",
+        /* ─── Professional Shadows ─── */
+        xs:   "0px 1px 2px 0px rgba(0,0,0,0.05)",
+        sm:   "0px 1px 3px 0px rgba(0,0,0,0.1), 0px 1px 2px -1px rgba(0,0,0,0.1)",
+        md:   "0px 4px 6px -1px rgba(0,0,0,0.1), 0px 2px 4px -2px rgba(0,0,0,0.1)",
+        lg:   "0px 10px 15px -3px rgba(0,0,0,0.1), 0px 4px 6px -4px rgba(0,0,0,0.1)",
+        xl:   "0px 20px 25px -5px rgba(0,0,0,0.1), 0px 8px 10px -6px rgba(0,0,0,0.1)",
         /* ─── Card variants ─── */
-        card:   "0px 8px 24px -4px rgba(0,0,0,0.4)",
-        "card-hover": "0px 12px 32px -4px rgba(191,18,77,0.15)", // Using crimson for hover
-        /* ─── Glow for Accents ─── */
-        "glow-crimson": "0px 0px 15px 0px rgba(191,18,77,0.3)", // crimson
-        "glow-blue": "0px 0px 15px 0px rgba(103,178,216,0.3)",  // blue
-        "glow-cyan": "0px 0px 15px 0px rgba(0,242,254,0.3)",
-        "glow-pink": "0px 0px 15px 0px rgba(255,113,174,0.3)",
-        "glow-purple": "0px 0px 15px 0px rgba(139,49,154,0.3)",
-        "glow-magenta": "0px 0px 15px 0px rgba(213,75,158,0.3)",
-        "glow-amber": "0px 0px 15px 0px rgba(255,177,41,0.3)",
-        "glow-emerald": "0px 0px 15px 0px rgba(0,242,96,0.3)",
+        card:   "0px 1px 3px 0px rgba(0,0,0,0.1)",
+        "card-hover": "0px 10px 15px -3px rgba(0,0,0,0.05)",
+        /* ─── Glow for Accents (Subtle) ─── */
+        "glow-crimson": "0px 0px 4px 0px rgba(225,29,72,0.1)",
+        "glow-blue": "0px 0px 4px 0px rgba(37,99,235,0.1)",
+        "glow-cyan": "0px 0px 4px 0px rgba(8,145,178,0.1)",
+        "glow-pink": "0px 0px 4px 0px rgba(219,39,119,0.1)",
+        "glow-purple": "0px 0px 4px 0px rgba(147,51,234,0.1)",
+        "glow-magenta": "0px 0px 4px 0px rgba(219,39,119,0.1)",
+        "glow-amber": "0px 0px 4px 0px rgba(217,119,6,0.1)",
+        "glow-emerald": "0px 0px 4px 0px rgba(16,185,129,0.1)",
         /* ─── Legacy ─── */
         default: "0px 4px 7px 0px rgba(0, 0, 0, 0.14)",
         error: "0px 12px 34px 0px rgba(13, 10, 44, 0.05)",

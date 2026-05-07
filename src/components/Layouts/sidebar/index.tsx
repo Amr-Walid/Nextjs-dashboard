@@ -65,7 +65,7 @@ export function Sidebar() {
       >
         <div className="flex h-full flex-col overflow-y-auto">
           {/* Logo area */}
-          <div className="flex items-center justify-between border-b border-surface-300 px-5 py-5 bg-surface-200/50">
+          <div className="flex items-center justify-between px-6 py-6">
             <Link
               href={"/"}
               onClick={() => isMobile && toggleSidebar()}
@@ -170,8 +170,8 @@ export function Sidebar() {
           </div>
 
           {/* Footer */}
-          <div className="border-t border-surface-300 px-5 py-4 bg-surface-200/50">
-            <p className="text-[11px] text-content-tertiary text-center">
+          <div className="px-5 py-4 mt-auto">
+            <p className="text-[10px] font-bold text-content-tertiary text-center uppercase tracking-widest">
               AdventureWorks Analytics v1.0
             </p>
           </div>

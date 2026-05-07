@@ -3,38 +3,38 @@
 @tailwind utilities;
 
 /* ============================================================
-   DESIGN TOKENS — Futuristic Light System
+   DESIGN TOKENS — Clean Enterprise System
    ============================================================ */
 @layer base {
   :root {
     /* Surfaces */
-    --surface-base: 255 255 255;
-    --surface-100: 255 248 222;
-    --surface-200: 255 242 198;
-    --surface-300: 241 245 249;
-    --surface-400: 226 232 240;
+    --surface-base: 248 250 252; /* slate-50 */
+    --surface-100: 255 255 255; /* white */
+    --surface-200: 241 245 249; /* slate-100 */
+    --surface-300: 226 232 240; /* slate-200 */
+    --surface-400: 203 213 225; /* slate-300 */
 
-    /* Palette Accents */
-    --neon-crimson: 140 169 255;
-    --neon-blue:    170 196 245;
-    --neon-cyan:    103 178 216;
-    --neon-pink:    255 113 174;
-    --neon-emerald: 16 185 129;
-    --neon-amber:   245 158 11;
+    /* Palette Accents (Professional Colors) */
+    --neon-crimson: 225 29 72;   /* rose-600 */
+    --neon-blue:    37 99 235;    /* blue-600 (Primary) */
+    --neon-cyan:    8 145 178;    /* cyan-600 */
+    --neon-pink:    219 39 119;   /* pink-600 */
+    --neon-emerald: 16 185 129;   /* emerald-500 */
+    --neon-amber:   217 119 6;    /* amber-600 */
 
     /* Hex Variables for Charts */
-    --chart-crimson: #8CA9FF;
-    --chart-blue:    #AAC4F5;
-    --chart-rose:    #FFB2D9;
-    --chart-amber:   #F59E0B;
-    --chart-cyan:    #67B2D8;
-    --chart-pink:    #FF71AE;
+    --chart-crimson: #E11D48;
+    --chart-blue:    #2563EB;
+    --chart-rose:    #DB2777;
+    --chart-amber:   #D97706;
+    --chart-cyan:    #0891B2;
+    --chart-pink:    #DB2777;
 
     /* Text hierarchy */
-    --text-heading:    #000000;
-    --text-body:       #1e293b;
-    --text-secondary:  #475569;
-    --text-tertiary:   #64748b;
+    --text-heading:    #0f172a;
+    --text-body:       #334155;
+    --text-secondary:  #64748b;
+    --text-tertiary:   #94a3b8;
 
     /* Borders */
     --border-subtle:   #f1f5f9;
@@ -45,19 +45,19 @@
   }
 
   body {
-    @apply bg-surface-base text-content antialiased selection:bg-neon-pink selection:text-white;
+    @apply bg-surface-base text-content antialiased selection:bg-neon-blue selection:text-white;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 
-  /* Futuristic scrollbar */
+  /* Professional scrollbar */
   * {
     scrollbar-width: thin;
-    scrollbar-color: #32364a transparent;
+    scrollbar-color: #cbd5e1 transparent;
   }
   *::-webkit-scrollbar { width: 6px; height: 6px; }
   *::-webkit-scrollbar-track { background: transparent; }
   *::-webkit-scrollbar-thumb {
-    background: #32364a;
+    background: #cbd5e1;
     border-radius: 999px;
   }
 }
@@ -69,17 +69,17 @@
   .no-scrollbar::-webkit-scrollbar { display: none; }
   .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-  /* Card — futuristic surface */
+  /* Card — Clean Enterprise surface */
   .card-futuristic {
-    @apply rounded-2xl bg-surface-100 border border-surface-300 shadow-card
+    @apply rounded-2xl bg-surface-100 border border-surface-200 shadow-sm
            transition-all duration-300 relative overflow-hidden;
   }
   .card-futuristic:hover {
-    @apply shadow-card-hover -translate-y-px border-neon-crimson/30;
+    @apply shadow-md -translate-y-px border-surface-300;
   }
 
   .gradient-text {
-    @apply bg-gradient-to-r from-neon-crimson to-neon-blue
+    @apply bg-gradient-to-r from-neon-blue to-neon-cyan
            bg-clip-text text-transparent;
   }
 
@@ -98,6 +98,18 @@
 }
 .no-scrollbar::-webkit-scrollbar {
   display: none;
+}
+
+/* Remove Recharts focus outline (Broad) */
+.recharts-wrapper:focus,
+.recharts-surface:focus,
+.recharts-sector:focus,
+.recharts-curve:focus,
+path:focus,
+g:focus,
+svg:focus {
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 /* Hide Next.js dev overlay / portal */

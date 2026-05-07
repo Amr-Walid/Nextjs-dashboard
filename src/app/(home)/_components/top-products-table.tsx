@@ -63,26 +63,25 @@ export function AWTopProducts({
   const LocalFilterDropdown = ({ type, value, options, openKey, onChange }: any) => {
     const isYear = type === "year";
     const Icon = isYear ? Calendar : Globe;
-    const activeColor = isYear ? "bg-neon-pink shadow-glow-pink" : "bg-neon-blue shadow-glow-blue";
     
     return (
       <Dropdown isOpen={openDropdown === openKey} setIsOpen={(val) => setOpenDropdown(val ? openKey : null)}>
         <DropdownTrigger className={cn(
-          "group flex items-center gap-2 px-2.5 py-1.5 rounded-xl transition-all duration-300 text-[10px] font-bold border border-transparent",
-          value !== "All" ? activeColor + " text-white" : "text-content-secondary bg-surface-200/50 hover:bg-surface-300/80 hover:text-content border-surface-300/30"
+          "group flex items-center gap-2 px-2.5 py-1.5 rounded-lg transition-all duration-300 text-[10px] font-bold border border-transparent",
+          value !== "All" ? "bg-blue-50 text-neon-blue border-blue-200" : "text-content-secondary bg-surface-200 hover:bg-surface-300 hover:text-content border-surface-300"
         )}>
           <Icon className="size-3" />
           <span>{value === "All" ? (isYear ? "السنة" : "المنطقة") : (isYear ? value : REGION_LABELS[value])}</span>
           <ChevronDown className={cn("size-2.5 transition-transform", openDropdown === openKey && "rotate-180")} />
         </DropdownTrigger>
-        <DropdownContent align="start" className="mt-2 bg-surface-100/95 backdrop-blur-xl border border-surface-300 shadow-2xl p-1 min-w-[130px] z-[9999] rounded-xl overflow-hidden">
+        <DropdownContent align="start" className="mt-2 bg-white border border-surface-300 shadow-xl p-1 min-w-[130px] z-[9999] rounded-lg overflow-hidden">
           {options.map((opt: string) => (
             <button
               key={opt}
               onClick={() => { onChange(opt); setOpenDropdown(null); }}
               className={cn(
-                "w-full text-right px-3 py-1.5 text-[11px] font-medium rounded-lg transition-all",
-                value === opt ? "bg-neon-blue/10 text-neon-blue" : "text-content-secondary hover:bg-surface-200"
+                "w-full text-right px-3 py-1.5 text-[11px] font-medium rounded-md transition-all",
+                value === opt ? "bg-blue-50 text-neon-blue" : "text-content-secondary hover:bg-surface-100"
               )}
             >
               {isYear ? (opt === "All" ? "كل السنين" : opt) : REGION_LABELS[opt]}
@@ -138,7 +137,7 @@ export function AWTopProducts({
               e.stopPropagation();
               setIsModalOpen(true);
             }}
-            className="text-sm font-medium text-neon-pink hover:text-neon-pink/80 transition-colors whitespace-nowrap"
+            className="text-sm font-bold text-neon-blue hover:underline transition-all whitespace-nowrap"
           >
             عرض الكل
           </button>
@@ -156,17 +155,13 @@ export function AWTopProducts({
           </thead>
           <tbody>
             {displayProducts.map((p, i) => {
-              let rankStyle = "bg-surface-300 text-content-secondary";
-              let rankGlow = "";
+              let rankStyle = "bg-surface-200 text-content-secondary";
               if (i === 0) {
-                rankStyle = "bg-neon-pink text-white";
-                rankGlow = "shadow-glow-pink";
-              } else if (i === 1) {
                 rankStyle = "bg-neon-blue text-white";
-                rankGlow = "shadow-glow-blue";
+              } else if (i === 1) {
+                rankStyle = "bg-blue-100 text-neon-blue";
               } else if (i === 2) {
-                rankStyle = "bg-neon-amber text-white";
-                rankGlow = "shadow-glow-amber";
+                rankStyle = "bg-blue-50 text-neon-blue";
               }
 
               return (
@@ -177,11 +172,11 @@ export function AWTopProducts({
                   <td className="py-4 pl-4">
                     <div className="flex items-center gap-3">
                       <div
-                        className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold ${rankStyle} ${rankGlow}`}
+                        className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-lg text-[10px] font-black ${rankStyle}`}
                       >
                         {i + 1}
                       </div>
-                      <span className="font-medium text-content group-hover:text-neon-pink transition-colors">
+                      <span className="font-bold text-content group-hover:text-neon-blue transition-colors">
                         {p.name}
                       </span>
                     </div>
@@ -190,11 +185,11 @@ export function AWTopProducts({
                     ${p.listPrice.toFixed(2)}
                   </td>
                   <td className="py-4 pr-4">
-                    <div className="flex flex-col gap-1">
-                      <span className="font-bold text-neon-pink">
+                    <div className="flex flex-col gap-0.5">
+                      <span className="font-black text-neon-blue">
                         ${(p.sales / 1000).toFixed(1)}K
                       </span>
-                      <span className="text-xs text-content-tertiary">
+                      <span className="text-[10px] font-bold text-content-tertiary uppercase tracking-tighter">
                         {p.qty.toLocaleString()} وحدة
                       </span>
                     </div>

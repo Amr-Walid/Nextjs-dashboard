@@ -11,12 +11,12 @@ export function Header() {
   const { toggleSidebar, isMobile } = useSidebarContext();
 
   return (
-    <header className="sticky top-0 z-30 flex items-center justify-between border-b border-surface-300 bg-surface-100/80 px-4 py-3.5 backdrop-blur-md shadow-xs md:px-6 2xl:px-10">
+    <header className="sticky top-0 z-30 flex items-center justify-between border-b border-surface-200 bg-white px-4 py-3 md:px-6 2xl:px-10">
       <div className="flex items-center gap-6">
         <div className="flex items-center gap-3">
           <button
             onClick={toggleSidebar}
-            className="flex h-9 w-9 items-center justify-center rounded-xl border border-surface-300 bg-surface-200 text-content-muted hover:text-neon-crimson hover:border-neon-crimson/50 transition-all duration-300 lg:hidden"
+            className="flex h-9 w-9 items-center justify-center rounded-lg border border-surface-200 bg-surface-50 text-content-muted hover:text-neon-blue hover:bg-blue-50 hover:border-blue-200 transition-all duration-300 lg:hidden"
             aria-label="Toggle Sidebar"
           >
             <MenuIcon />
@@ -36,10 +36,10 @@ export function Header() {
           )}
 
           <div className="max-sm:hidden">
-            <h1 className="mb-0 text-lg font-bold text-content tracking-wide">
+            <h1 className="mb-0 text-base font-black text-content tracking-tight">
               لوحة التحكم
             </h1>
-            <p className="text-[10px] font-medium text-neon-crimson leading-none mt-0.5">AdventureWorks Analytics</p>
+            <p className="text-[9px] font-bold text-content-tertiary uppercase tracking-widest leading-none mt-1">AdventureWorks</p>
           </div>
         </div>
 

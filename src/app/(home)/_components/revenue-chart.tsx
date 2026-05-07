@@ -101,26 +101,26 @@ export function AWRevenueChart({
           {/* Legend Indicators */}
           <div className="flex gap-3">
             <div className="flex items-center gap-1.5">
-              <span className="h-1.5 w-1.5 rounded-full bg-neon-pink shadow-[0_0_8px_var(--chart-pink)]" />
+              <span className="h-2 w-2 rounded-full bg-neon-pink" />
               <span className="text-[10px] font-bold text-content-secondary uppercase tracking-wider">إيرادات</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="h-1.5 w-1.5 rounded-full bg-neon-blue shadow-[0_0_8px_var(--chart-blue)]" />
+              <span className="h-2 w-2 rounded-full bg-neon-blue" />
               <span className="text-[10px] font-bold text-content-secondary uppercase tracking-wider">أرباح</span>
             </div>
           </div>
         </div>
 
         {/* Filter Tabs */}
-        <div className="flex items-center gap-1 p-1 bg-surface-200 rounded-xl border border-surface-300 w-fit h-fit self-end sm:self-center">
+        <div className="flex items-center gap-1 p-1 bg-surface-200 rounded-lg border border-surface-300 w-fit h-fit self-end sm:self-center">
           {[6, 12, 24].map((r) => (
             <button
               key={r}
               onClick={() => setRange(r as any)}
               className={cn(
-                "px-3 py-1.5 text-[11px] font-bold rounded-lg transition-all duration-300",
+                "px-3 py-1.5 text-[11px] font-bold rounded-md transition-all duration-300",
                 range === r 
-                  ? "bg-gradient-to-r from-neon-crimson to-neon-blue text-white shadow-glow-blue" 
+                  ? "bg-neon-blue text-white shadow-sm" 
                   : "text-content-tertiary hover:text-content hover:bg-surface-300"
               )}
             >
@@ -170,26 +170,26 @@ export function AWRevenueChart({
               dataKey="sales"
               name="الإيرادات"
               stroke="var(--chart-pink)"
-              strokeWidth={2}
+              strokeWidth={2.5}
               fillOpacity={1}
               fill="url(#colorSales)"
               isAnimationActive={true}
               animationDuration={1000}
               animationEasing="ease-in-out"
-              activeDot={{ r: 6, fill: "var(--chart-pink)", strokeWidth: 0, style: { filter: "drop-shadow(0 0 8px var(--chart-pink))" } }}
+              activeDot={{ r: 5, fill: "var(--chart-pink)", strokeWidth: 2, stroke: "#fff" }}
             />
             <Area
               type="monotone"
               dataKey="profit"
               name="الأرباح"
               stroke="var(--chart-blue)"
-              strokeWidth={2}
+              strokeWidth={2.5}
               fillOpacity={1}
               fill="url(#colorProfit)"
               isAnimationActive={true}
               animationDuration={1000}
               animationEasing="ease-in-out"
-              activeDot={{ r: 6, fill: "var(--chart-blue)", strokeWidth: 0, style: { filter: "drop-shadow(0 0 8px var(--chart-blue))" } }}
+              activeDot={{ r: 5, fill: "var(--chart-blue)", strokeWidth: 2, stroke: "#fff" }}
             />
           </AreaChart>
         </ResponsiveContainer>

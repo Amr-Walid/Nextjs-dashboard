@@ -4,11 +4,11 @@ import Link from "next/link";
 import { useSidebarContext } from "./sidebar-context";
 
 const menuItemBaseStyles = cva(
-  "group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-[14px] font-medium text-content-tertiary transition-all duration-300",
+  "group relative flex items-center gap-3 rounded-xl px-4 py-2.5 text-[14px] font-medium text-content-secondary transition-all duration-300",
   {
     variants: {
       isActive: {
-        true: "bg-surface-300/50 text-neon-crimson font-bold before:absolute before:right-0 before:top-2 before:bottom-2 before:w-1 before:rounded-full before:bg-neon-crimson before:shadow-glow-crimson shadow-card-hover",
+        true: "bg-blue-50 text-neon-blue font-bold before:absolute before:right-0 before:top-2.5 before:bottom-2.5 before:w-1 before:rounded-full before:bg-neon-blue shadow-none",
         false: "hover:bg-surface-200 hover:text-content",
       },
     },

@@ -35,16 +35,16 @@ export function HeaderFilters() {
       {/* Region Filter */}
       <Dropdown isOpen={openDropdown === "region"} setIsOpen={(val) => setOpenDropdown(val ? "region" : null)}>
         <DropdownTrigger className={cn(
-          "group flex items-center gap-2 px-3 py-1.5 rounded-xl transition-all duration-300 text-[11px] font-bold tracking-tight",
+          "group flex items-center gap-2 px-3 py-1.5 rounded-xl transition-all duration-300 text-[11px] font-bold tracking-tight border border-transparent",
           filters.region !== "All" 
-            ? "bg-neon-blue text-white shadow-glow-blue" 
-            : "text-content-secondary hover:bg-surface-300/80 hover:text-content"
+            ? "bg-blue-50 text-neon-blue border-blue-200" 
+            : "text-content-secondary hover:bg-surface-200 hover:text-content"
         )}>
-          <Globe className={cn("size-3.5 transition-colors", filters.region !== "All" ? "text-white" : "text-neon-blue")} />
+          <Globe className={cn("size-3.5 transition-colors", filters.region !== "All" ? "text-neon-blue" : "text-content-tertiary")} />
           <span>{filters.region === "All" ? "المنطقة" : REGION_LABELS[filters.region]}</span>
           <ChevronDown className={cn("size-3 opacity-50 transition-transform duration-300", openDropdown === "region" && "rotate-180")} />
         </DropdownTrigger>
-        <DropdownContent align="end" className="mt-2 bg-surface-100/95 backdrop-blur-xl border border-surface-300 shadow-2xl p-1.5 min-w-[160px] z-[9999] rounded-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+        <DropdownContent align="end" className="mt-2 bg-white border border-surface-300 shadow-lg p-1.5 min-w-[160px] z-[9999] rounded-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
           <div className="px-3 py-1.5 mb-1 text-[10px] font-black text-content-tertiary uppercase tracking-widest border-b border-surface-200">اختر المنطقة</div>
           {REGIONS.map((r) => (
             <button
@@ -67,16 +67,16 @@ export function HeaderFilters() {
       {/* Year Filter */}
       <Dropdown isOpen={openDropdown === "year"} setIsOpen={(val) => setOpenDropdown(val ? "year" : null)}>
         <DropdownTrigger className={cn(
-          "group flex items-center gap-2 px-3 py-1.5 rounded-xl transition-all duration-300 text-[11px] font-bold tracking-tight",
+          "group flex items-center gap-2 px-3 py-1.5 rounded-xl transition-all duration-300 text-[11px] font-bold tracking-tight border border-transparent",
           filters.year !== "All" 
-            ? "bg-neon-pink text-white shadow-glow-pink" 
-            : "text-content-secondary hover:bg-surface-300/80 hover:text-content"
+            ? "bg-pink-50 text-neon-pink border-pink-200" 
+            : "text-content-secondary hover:bg-surface-200 hover:text-content"
         )}>
-          <Calendar className={cn("size-3.5 transition-colors", filters.year !== "All" ? "text-white" : "text-neon-pink")} />
+          <Calendar className={cn("size-3.5 transition-colors", filters.year !== "All" ? "text-neon-pink" : "text-content-tertiary")} />
           <span>{filters.year === "All" ? "السنة" : filters.year}</span>
           <ChevronDown className={cn("size-3 opacity-50 transition-transform duration-300", openDropdown === "year" && "rotate-180")} />
         </DropdownTrigger>
-        <DropdownContent align="end" className="mt-2 bg-surface-100/95 backdrop-blur-xl border border-surface-300 shadow-2xl p-1.5 min-w-[140px] z-[9999] rounded-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+        <DropdownContent align="end" className="mt-2 bg-white border border-surface-300 shadow-lg p-1.5 min-w-[140px] z-[9999] rounded-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
           <div className="px-3 py-1.5 mb-1 text-[10px] font-black text-content-tertiary uppercase tracking-widest border-b border-surface-200">اختر السنة</div>
           {YEARS.map((y) => (
             <button
