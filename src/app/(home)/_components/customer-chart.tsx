@@ -287,7 +287,7 @@ export function AWCustomerChart({
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
-                    data={scaledGender.map(g => ({ name: g.label === "M" ? "رجال" : "سيدات", value: g.count }))}
+                    data={scaledGender.map(g => ({ name: g.label, value: g.count }))}
                     cx="50%"
                     cy="50%"
                     innerRadius={80}
@@ -318,7 +318,7 @@ export function AWCustomerChart({
                       "h-3 w-3 rounded-full",
                       i === 0 ? 'bg-neon-pink shadow-glow-pink' : 'bg-neon-blue shadow-glow-blue'
                     )} />
-                    <span className="text-sm font-bold text-content-secondary">{g.label === "M" ? "رجال" : "سيدات"}</span>
+                    <span className="text-sm font-bold text-content-secondary">{g.label}</span>
                   </div>
                   <div className="text-lg font-black text-content">
                     {g.count.toLocaleString()}
