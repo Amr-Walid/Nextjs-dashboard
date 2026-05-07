@@ -7,6 +7,7 @@ import { AWRegionChart } from "./_components/region-chart";
 import { AWCustomerChart } from "./_components/customer-chart";
 import { AWYearlyStats } from "./_components/yearly-stats";
 import { SalesQuarterlyChart } from "./_components/quarterly-chart";
+
 export default async function Home() {
   const {
     kpis,
@@ -23,32 +24,38 @@ export default async function Home() {
   return (
     <div className="space-y-6">
       {/* KPI Cards */}
-      <AWKPICards kpis={kpis} />
+      <AWKPICards kpis={kpis} yearlyData={yearlyData} territories={territories} />
 
       {/* Charts Row 1: Main Revenue & Regions */}
       <div className="grid grid-cols-12 gap-4 md:gap-6">
         <div className="col-span-12 xl:col-span-8">
-          <AWRevenueChart data={revenueData} />
+          <AWRevenueChart data={revenueData} territories={territories} totalSales={kpis.totalSales} />
         </div>
         <div className="col-span-12 xl:col-span-4">
-          <AWRegionChart groups={groups} />
+          <AWRegionChart groups={groups} yearlyData={yearlyData} totalSales={kpis.totalSales} />
         </div>
       </div>
 
       {/* Charts Row 2: Yearly Stats & Customers */}
       <div className="grid grid-cols-12 gap-4 md:gap-6 items-stretch">
         <div className="col-span-12 xl:col-span-5">
-          <AWYearlyStats yearlyData={yearlyData} />
+          <AWYearlyStats yearlyData={yearlyData} territories={territories} totalSales={kpis.totalSales} />
         </div>
         <div className="col-span-12 xl:col-span-7">
-          <AWCustomerChart incomeData={incomeData} genderData={genderData} />
+          <AWCustomerChart 
+            incomeData={incomeData} 
+            genderData={genderData} 
+            yearlyData={yearlyData} 
+            territories={territories}
+            totalCustomers={kpis.totalCustomers} 
+          />
         </div>
       </div>
 
       {/* Charts Row 3: Quarterly Comparison & Detailed Regions */}
       <div className="grid grid-cols-12 gap-4 md:gap-6 items-stretch">
         <div className="col-span-12 xl:col-span-5">
-          <SalesQuarterlyChart data={quarterlyData} />
+          <SalesQuarterlyChart data={quarterlyData} territories={territories} totalSales={kpis.totalSales} />
         </div>
         <div className="col-span-12 xl:col-span-7">
           <TerritoriesTable territories={territories} />
@@ -58,7 +65,12 @@ export default async function Home() {
       {/* Row 4: Top Products Table */}
       <div className="grid grid-cols-12 gap-4 md:gap-6">
         <div className="col-span-12">
-          <AWTopProducts products={topProducts} />
+          <AWTopProducts 
+            products={topProducts} 
+            yearlyData={yearlyData} 
+            territories={territories} 
+            totalSales={kpis.totalSales} 
+          />
         </div>
       </div>
     </div>

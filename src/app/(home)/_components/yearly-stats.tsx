@@ -1,4 +1,5 @@
 "use client";
+import { useMemo, useEffect, useState } from "react";
 import {
   BarChart,
   Bar,
@@ -8,12 +9,65 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import type { YearlyData } from "@/services/adventureworks.service";
+import type { YearlyData, TerritoryData } from "@/services/adventureworks.service";
 import { CustomTooltip } from "@/components/ui/chart-tooltip";
+import { useFilters } from "@/context/FilterContext";
+import { cn } from "@/lib/utils";
 
-export function AWYearlyStats({ yearlyData }: { yearlyData: YearlyData[] }) {
+const REGION_LABELS: Record<string, string> = {
+  "All": "كل المناطق",
+  "North America": "أمريكا الشمالية",
+  "Europe": "أوروبا",
+  "Pacific": "المحيط الهادي"
+};
+
+export function AWYearlyStats({ 
+  yearlyData, 
+  territories, 
+  totalSales 
+}: { 
+  yearlyData: YearlyData[],
+  territories: TerritoryData[],
+  totalSales: number
+}) {
+  const { filters, isPending } = useFilters();
+
+  const chartData = useMemo(() => {
+    let result = yearlyData.map(y => ({ ...y }));
+
+    // 1. Filter by year if selected
+    if (filters.year !== "All") {
+      result = result.filter(y => y.year === filters.year);
+    }
+
+    // 2. Scale by region ratio if selected
+    if (filters.region !== "All") {
+      const target = filters.region.toLowerCase().trim();
+      const regionTerritories = territories.filter(t => 
+        t.group.toLowerCase().trim().includes(target) || 
+        target.includes(t.group.toLowerCase().trim())
+      );
+      const regSales = regionTerritories.reduce((s, t) => s + t.sales, 0);
+      const ratio = totalSales > 0 ? regSales / totalSales : 0;
+
+      if (ratio > 0) {
+        result = result.map(y => ({
+          ...y,
+          sales: y.sales * ratio,
+          profit: y.profit * ratio,
+          orders: Math.round(y.orders * ratio),
+        }));
+      }
+    }
+
+    return result;
+  }, [yearlyData, filters.year, filters.region, territories, totalSales]);
+
   return (
-    <div className="card-futuristic p-5 h-full flex flex-col">
+    <div className={cn(
+      "card-futuristic p-5 h-full flex flex-col transition-all duration-500",
+      isPending ? "opacity-70 blur-[1px] scale-[0.99]" : "opacity-100 blur-0 scale-100"
+    )}>
       <div className="mb-6 flex justify-between items-center gap-4">
         <div>
           <h3 className="text-base font-bold text-content mb-1">
@@ -23,17 +77,25 @@ export function AWYearlyStats({ yearlyData }: { yearlyData: YearlyData[] }) {
             الإيرادات والأرباح سنة بسنة
           </p>
         </div>
+        {filters.region !== "All" && (
+          <span className="text-[10px] px-2 py-1 rounded-lg bg-neon-blue text-white shadow-glow-blue font-bold">
+            {REGION_LABELS[filters.region]}
+          </span>
+        )}
       </div>
 
       {/* Quick stats row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
-        {yearlyData.map((y, index) => (
+        {chartData.map((y) => (
           <div
             key={y.year}
-            className="rounded-xl bg-surface-200 border border-surface-300 p-3 text-center transition-all duration-300 hover:shadow-glow-pink/20 hover:-translate-y-1"
+            className={cn(
+              "rounded-xl bg-surface-200 border border-surface-300 p-3 text-center transition-all duration-300 hover:shadow-glow-pink/20 hover:-translate-y-1",
+              filters.year !== "All" && filters.year === y.year ? "border-neon-pink ring-1 ring-neon-pink/30" : ""
+            )}
           >
             <p className="text-xs font-medium text-content-tertiary mb-1">{y.year}</p>
-            <p className="font-bold text-content text-base">
+            <p className="font-black text-content text-base">
               ${(y.sales / 1_000_000).toFixed(1)}M
             </p>
             <p className="text-xs font-medium text-neon-blue mt-0.5">
@@ -47,7 +109,7 @@ export function AWYearlyStats({ yearlyData }: { yearlyData: YearlyData[] }) {
       <div className="h-[250px] w-full mt-auto" dir="ltr">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
-            data={yearlyData}
+            data={chartData}
             margin={{ top: 0, right: 0, left: -20, bottom: 0 }}
           >
             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border-default)" opacity={0.5} />
@@ -74,7 +136,8 @@ export function AWYearlyStats({ yearlyData }: { yearlyData: YearlyData[] }) {
               fill="var(--chart-pink)" 
               radius={[4, 4, 0, 0]}
               barSize={12}
-              isAnimationActive={false}
+              isAnimationActive={true}
+              animationDuration={800}
             />
             <Bar 
               dataKey="profit" 
@@ -82,7 +145,8 @@ export function AWYearlyStats({ yearlyData }: { yearlyData: YearlyData[] }) {
               fill="var(--chart-blue)" 
               radius={[4, 4, 0, 0]}
               barSize={12}
-              isAnimationActive={false}
+              isAnimationActive={true}
+              animationDuration={1000}
             />
           </BarChart>
         </ResponsiveContainer>
@@ -102,3 +166,4 @@ export function AWYearlyStats({ yearlyData }: { yearlyData: YearlyData[] }) {
     </div>
   );
 }
+

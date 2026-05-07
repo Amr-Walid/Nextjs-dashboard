@@ -66,13 +66,12 @@ export type GroupData = {
 // ── Dashboard Data ────────────────────────────────────
 export function getDashboardData() {
   const monthly = awData.monthly as MonthlyData[];
-  const last24 = monthly.slice(-24);
   
   return {
     kpis: awData.kpis as KPIs,
     revenueChart: {
-      sales: last24.map((m) => ({ x: dayjs(m.month).format("MMM YYYY"), y: Math.round(m.sales) })),
-      profit: last24.map((m) => ({ x: dayjs(m.month).format("MMM YYYY"), y: Math.round(m.profit) })),
+      sales: monthly.map((m) => ({ x: dayjs(m.month).format("MMM YYYY"), y: Math.round(m.sales) })),
+      profit: monthly.map((m) => ({ x: dayjs(m.month).format("MMM YYYY"), y: Math.round(m.profit) })),
     },
     groups: awData.groups as GroupData[],
     topProducts: (awData.topProducts as ProductData[]).slice(0, 50),

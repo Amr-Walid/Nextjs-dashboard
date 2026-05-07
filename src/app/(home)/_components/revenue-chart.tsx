@@ -1,4 +1,5 @@
 "use client";
+import { useState, useMemo, useEffect } from "react";
 import {
   AreaChart,
   Area,
@@ -9,40 +10,123 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { CustomTooltip } from "@/components/ui/chart-tooltip";
+import { cn } from "@/lib/utils";
+import { useFilters } from "@/context/FilterContext";
 
-type RevenueData = {
-  sales: { x: string; y: number }[];
-  profit: { x: string; y: number }[];
+type ChartData = { x: string; y: number };
+type TerritoryData = { group: string; sales: number };
+
+const REGION_LABELS: Record<string, string> = {
+  "All": "كل المناطق",
+  "North America": "أمريكا الشمالية",
+  "Europe": "أوروبا",
+  "Pacific": "المحيط الهادي"
 };
 
-export function AWRevenueChart({ data }: { data: RevenueData }) {
-  // Data is now pre-formatted from the server
-  const chartData = data.sales.map((item, index) => ({
-    name: item.x,
-    sales: item.y,
-    profit: data.profit[index]?.y || 0,
-  }));
+export function AWRevenueChart({ 
+  data, 
+  territories, 
+  totalSales 
+}: { 
+  data: { sales: ChartData[]; profit: ChartData[] },
+  territories: TerritoryData[],
+  totalSales: number
+}) {
+  const { filters, isPending } = useFilters();
+  const [range, setRange] = useState<6 | 12 | 24>(24);
+
+  // Filter and Scale data based on Year and Region
+  const chartData = useMemo(() => {
+    let sales = [...data.sales];
+    let profit = [...data.profit];
+
+    // 1. Filter by year if selected
+    if (filters.year !== "All") {
+      sales = sales.filter(s => s.x.includes(filters.year));
+      profit = profit.filter(p => p.x.includes(filters.year));
+    } else {
+      sales = sales.slice(-range);
+      profit = profit.slice(-range);
+    }
+
+    let result = sales.map((s, i) => ({
+      name: s.x,
+      sales: s.y,
+      profit: profit[i]?.y ?? 0,
+    }));
+
+    // 2. Scale by region ratio if selected
+    if (filters.region !== "All") {
+      const target = filters.region.toLowerCase().trim();
+      const regionTerritories = territories.filter(t => 
+        t.group.toLowerCase().trim().includes(target) || 
+        target.includes(t.group.toLowerCase().trim())
+      );
+      const regSales = regionTerritories.reduce((s, t) => s + t.sales, 0);
+      const ratio = totalSales > 0 ? regSales / totalSales : 0;
+
+      if (ratio > 0) {
+        result = result.map(d => ({
+          ...d,
+          sales: Math.round(d.sales * ratio),
+          profit: Math.round(d.profit * ratio),
+        }));
+      }
+    }
+
+    return result;
+  }, [data, range, filters.year, filters.region, territories, totalSales]);
 
   return (
-    <div className="card-futuristic p-5 h-full">
-      <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-        <div>
-          <h3 className="text-base font-bold text-content tracking-wide">
-            اتجاه الإيرادات والأرباح
-          </h3>
-          <p className="text-xs font-medium text-neon-pink">
-            آخر 24 شهر • AdventureWorks
-          </p>
+    <div className={cn(
+      "card-futuristic p-5 h-full transition-all duration-500",
+      isPending ? "scale-[0.98] opacity-90 blur-[1px]" : "scale-100 opacity-100 blur-0"
+    )}>
+      <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="flex flex-col gap-2">
+          <div>
+            <h3 className="text-base font-bold text-content tracking-wide flex items-center gap-2">
+              اتجاه الإيرادات والأرباح
+              {filters.region !== "All" && (
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-neon-blue/20 text-neon-blue border border-neon-blue/30">
+                  {REGION_LABELS[filters.region]}
+                </span>
+              )}
+            </h3>
+            <p className="text-xs font-medium text-neon-pink">
+              عرض البيانات لآخر {range === 24 ? "سنتين" : range === 12 ? "سنة" : "6 أشهر"}
+            </p>
+          </div>
+          
+          {/* Legend Indicators */}
+          <div className="flex gap-3">
+            <div className="flex items-center gap-1.5">
+              <span className="h-1.5 w-1.5 rounded-full bg-neon-pink shadow-[0_0_8px_var(--chart-pink)]" />
+              <span className="text-[10px] font-bold text-content-secondary uppercase tracking-wider">إيرادات</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="h-1.5 w-1.5 rounded-full bg-neon-blue shadow-[0_0_8px_var(--chart-blue)]" />
+              <span className="text-[10px] font-bold text-content-secondary uppercase tracking-wider">أرباح</span>
+            </div>
+          </div>
         </div>
-        <div className="flex gap-2">
-          <span className="inline-flex items-center gap-1.5 rounded-lg bg-surface-200 px-3 py-1 text-xs font-medium text-neon-pink shadow-glow-pink">
-            <span className="h-1.5 w-1.5 rounded-full bg-neon-pink" />
-            إيرادات
-          </span>
-          <span className="inline-flex items-center gap-1.5 rounded-lg bg-surface-200 px-3 py-1 text-xs font-medium text-neon-blue shadow-glow-blue">
-            <span className="h-1.5 w-1.5 rounded-full bg-neon-blue" />
-            أرباح
-          </span>
+
+        {/* Filter Tabs */}
+        <div className="flex items-center gap-1 p-1 bg-surface-200 rounded-xl border border-surface-300 w-fit h-fit self-end sm:self-center">
+          {[6, 12, 24].map((r) => (
+            <button
+              key={r}
+              onClick={() => setRange(r as any)}
+              className={cn(
+                "px-3 py-1.5 text-[11px] font-bold rounded-lg transition-all duration-300",
+                range === r 
+                  ? "bg-gradient-to-r from-neon-crimson to-neon-blue text-white shadow-glow-blue" 
+                  : "text-content-tertiary hover:text-content hover:bg-surface-300"
+              )}
+            >
+              {r === 24 ? "24 شهر" : r === 12 ? "12 شهر" : "6 أشهر"}
+            </button>
+          ))}
         </div>
       </div>
       
@@ -89,7 +173,9 @@ export function AWRevenueChart({ data }: { data: RevenueData }) {
               strokeWidth={2}
               fillOpacity={1}
               fill="url(#colorSales)"
-              isAnimationActive={false}
+              isAnimationActive={true}
+              animationDuration={1000}
+              animationEasing="ease-in-out"
               activeDot={{ r: 6, fill: "var(--chart-pink)", strokeWidth: 0, style: { filter: "drop-shadow(0 0 8px var(--chart-pink))" } }}
             />
             <Area
@@ -100,7 +186,9 @@ export function AWRevenueChart({ data }: { data: RevenueData }) {
               strokeWidth={2}
               fillOpacity={1}
               fill="url(#colorProfit)"
-              isAnimationActive={false}
+              isAnimationActive={true}
+              animationDuration={1000}
+              animationEasing="ease-in-out"
               activeDot={{ r: 6, fill: "var(--chart-blue)", strokeWidth: 0, style: { filter: "drop-shadow(0 0 8px var(--chart-blue))" } }}
             />
           </AreaChart>
@@ -109,3 +197,5 @@ export function AWRevenueChart({ data }: { data: RevenueData }) {
     </div>
   );
 }
+
+

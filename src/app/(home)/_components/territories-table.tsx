@@ -1,4 +1,8 @@
+"use client";
+import { useMemo } from "react";
 import type { TerritoryData } from "@/services/adventureworks.service";
+import { useFilters } from "@/context/FilterContext";
+import { cn } from "@/lib/utils";
 
 const GROUP_LABELS: Record<string, string> = {
   "North America": "أمريكا الشمالية",
@@ -21,14 +25,30 @@ export function TerritoriesTable({
 }: {
   territories: TerritoryData[];
 }) {
-  const validTerritories = territories.filter((t) => t.group !== "NA");
-  const totalSales = validTerritories.reduce((s, t) => s + t.sales, 0);
+  const { filters } = useFilters();
+
+  const filteredTerritories = useMemo(() => {
+    let result = territories.filter((t) => t.group !== "NA");
+    if (filters.region !== "All") {
+      result = result.filter(t => t.group === filters.region);
+    }
+    return result;
+  }, [territories, filters.region]);
+
+  const totalSales = filteredTerritories.reduce((s, t) => s + t.sales, 0);
 
   return (
-    <div className="card-futuristic p-6 h-full">
-      <div className="mb-6">
-        <h3 className="text-xl font-black text-content">تفصيل المناطق</h3>
-        <p className="text-sm font-medium text-neon-pink">المبيعات حسب المنطقة الجغرافية</p>
+    <div className="card-futuristic p-6 h-full transition-all duration-500">
+      <div className="mb-6 flex justify-between items-center">
+        <div>
+          <h3 className="text-xl font-black text-content">تفصيل المناطق</h3>
+          <p className="text-sm font-medium text-neon-pink">المبيعات حسب المنطقة الجغرافية</p>
+        </div>
+        {filters.region !== "All" && (
+          <span className="text-[10px] px-2 py-1 rounded-lg bg-neon-blue text-white shadow-glow-blue font-bold">
+            فلتر: {filters.region}
+          </span>
+        )}
       </div>
 
       <div className="overflow-x-auto no-scrollbar">
@@ -46,12 +66,12 @@ export function TerritoriesTable({
             </tr>
           </thead>
           <tbody className="divide-y divide-surface-300/50">
-            {validTerritories.map((t) => {
-              const pct = ((t.sales / totalSales) * 100).toFixed(1);
+            {filteredTerritories.map((t) => {
+              const pct = totalSales > 0 ? ((t.sales / totalSales) * 100).toFixed(1) : "0.0";
               return (
                 <tr
                   key={t.key}
-                  className="transition-colors hover:bg-surface-300/20 group"
+                  className="transition-colors hover:bg-surface-300/20 group animate-fade-up"
                 >
                   <td className="py-4 pr-2 font-bold text-content group-hover:text-neon-pink transition-colors">
                     {t.region}
@@ -61,7 +81,10 @@ export function TerritoriesTable({
                   </td>
                   <td className="py-4 pr-2">
                     <span
-                      className={`rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-tighter ${GROUP_COLORS[t.group] ?? "bg-surface-300 text-content-tertiary"}`}
+                      className={cn(
+                        "rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-tighter",
+                        GROUP_COLORS[t.group] || "bg-surface-300 text-content-tertiary"
+                      )}
                     >
                       {GROUP_LABELS[t.group] ?? t.group}
                     </span>
@@ -92,3 +115,4 @@ export function TerritoriesTable({
     </div>
   );
 }
+
