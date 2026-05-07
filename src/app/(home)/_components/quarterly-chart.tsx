@@ -12,20 +12,7 @@ import {
 } from "recharts";
 import type { QuarterlyData, TerritoryData } from "@/services/adventureworks.service";
 import { useFilters } from "@/context/FilterContext";
-import { cn } from "@/lib/utils";
-import { CustomTooltip } from "@/components/ui/chart-tooltip";
-import { Dropdown, DropdownContent, DropdownTrigger } from "@/components/ui/dropdown";
-import { ChevronDown, Globe, Calendar, X } from "lucide-react";
-
-const REGION_LABELS: Record<string, string> = {
-  "All": "كل المناطق",
-  "North America": "أمريكا الشمالية",
-  "Europe": "أوروبا",
-  "Pacific": "المحيط الهادي"
-};
-
-const YEARS = ["All", "2005", "2006", "2007", "2008"];
-const REGIONS = ["All", "North America", "Europe", "Pacific"];
+import { LocalFilterGroup } from "@/components/ui/local-filter-group";
 
 export function SalesQuarterlyChart({ 
   data, 
@@ -75,39 +62,6 @@ export function SalesQuarterlyChart({
     }));
   }, [data, globalFilters, localFilter, territories, totalSales]);
 
-  const LocalFilterDropdown = ({ type, value, options, openKey, onChange }: any) => {
-    const isYear = type === "year";
-    const Icon = isYear ? Calendar : Globe;
-    const activeColor = isYear ? "bg-neon-pink shadow-glow-pink" : "bg-neon-blue shadow-glow-blue";
-    
-    return (
-      <Dropdown isOpen={openDropdown === openKey} setIsOpen={(val) => setOpenDropdown(val ? openKey : null)}>
-        <DropdownTrigger className={cn(
-          "group flex items-center gap-2 px-2.5 py-1.5 rounded-xl transition-all duration-300 text-[10px] font-bold border border-transparent",
-          value !== "All" ? activeColor + " text-white" : "text-content-secondary bg-surface-200/50 hover:bg-surface-300/80 hover:text-content border-surface-300/30"
-        )}>
-          <Icon className="size-3" />
-          <span>{value === "All" ? (isYear ? "السنة" : "المنطقة") : (isYear ? value : REGION_LABELS[value])}</span>
-          <ChevronDown className={cn("size-2.5 transition-transform", openDropdown === openKey && "rotate-180")} />
-        </DropdownTrigger>
-        <DropdownContent align="start" className="mt-2 bg-surface-100/95 backdrop-blur-xl border border-surface-300 shadow-2xl p-1 min-w-[130px] z-[9999] rounded-xl overflow-hidden">
-          {options.map((opt: string) => (
-            <button
-              key={opt}
-              onClick={() => { onChange(opt); setOpenDropdown(null); }}
-              className={cn(
-                "w-full text-right px-3 py-1.5 text-[11px] font-medium rounded-lg transition-all",
-                value === opt ? "bg-neon-blue/10 text-neon-blue" : "text-content-secondary hover:bg-surface-200"
-              )}
-            >
-              {isYear ? (opt === "All" ? "كل السنين" : opt) : REGION_LABELS[opt]}
-            </button>
-          ))}
-        </DropdownContent>
-      </Dropdown>
-    );
-  };
-
   return (
     <div className={cn(
       "card-futuristic p-5 h-full flex flex-col transition-all duration-500",
@@ -126,30 +80,13 @@ export function SalesQuarterlyChart({
           <p className="text-xs font-medium text-neon-pink">إيرادات وأرباح كل ربع سنة</p>
         </div>
 
-        <div className="flex items-center gap-1.5 p-1 bg-surface-200/50 rounded-2xl border border-surface-300/50">
-          <LocalFilterDropdown 
-            type="region" 
-            value={localFilter.region} 
-            options={REGIONS} 
-            openKey="region" 
-            onChange={(v: string) => setLocalFilter(p => ({ ...p, region: v }))} 
-          />
-          <LocalFilterDropdown 
-            type="year" 
-            value={localFilter.year} 
-            options={YEARS} 
-            openKey="year" 
-            onChange={(v: string) => setLocalFilter(p => ({ ...p, year: v }))} 
-          />
-          {(localFilter.region !== "All" || localFilter.year !== "All") && (
-            <button
-              onClick={() => setLocalFilter({ year: "All", region: "All" })}
-              className="p-1.5 text-content-tertiary hover:text-red-500 transition-colors"
-            >
-              <X className="size-3.5" />
-            </button>
-          )}
-        </div>
+        <LocalFilterGroup 
+          current={localFilter} 
+          openDropdown={openDropdown} 
+          setOpen={setOpenDropdown} 
+          onChange={(key, val) => setLocalFilter(p => ({ ...p, [key]: val }))} 
+          reset={() => setLocalFilter({ year: "All", region: "All" })} 
+        />
       </div>
 
       <div className="flex-1 min-h-[450px] w-full" dir="ltr">

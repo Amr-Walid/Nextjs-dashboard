@@ -15,8 +15,7 @@ const REGION_LABELS: Record<string, string> = {
   "Pacific": "المحيط الهادي"
 };
 
-const YEARS = ["All", "2005", "2006", "2007", "2008"];
-const REGIONS = ["All", "North America", "Europe", "Pacific"];
+import { LocalFilterGroup } from "@/components/ui/local-filter-group";
 
 export function AWTopProducts({ 
   products,
@@ -60,38 +59,6 @@ export function AWTopProducts({
 
   const displayProducts = filteredProducts.slice(0, 5);
 
-  const LocalFilterDropdown = ({ type, value, options, openKey, onChange }: any) => {
-    const isYear = type === "year";
-    const Icon = isYear ? Calendar : Globe;
-    
-    return (
-      <Dropdown isOpen={openDropdown === openKey} setIsOpen={(val) => setOpenDropdown(val ? openKey : null)}>
-        <DropdownTrigger className={cn(
-          "group flex items-center gap-2 px-2.5 py-1.5 rounded-lg transition-all duration-300 text-[10px] font-bold border border-transparent",
-          value !== "All" ? "bg-blue-50 text-neon-blue border-blue-200" : "text-content-secondary bg-surface-200 hover:bg-surface-300 hover:text-content border-surface-300"
-        )}>
-          <Icon className="size-3" />
-          <span>{value === "All" ? (isYear ? "السنة" : "المنطقة") : (isYear ? value : REGION_LABELS[value])}</span>
-          <ChevronDown className={cn("size-2.5 transition-transform", openDropdown === openKey && "rotate-180")} />
-        </DropdownTrigger>
-        <DropdownContent align="start" className="mt-2 bg-white border border-surface-300 shadow-xl p-1 min-w-[130px] z-[9999] rounded-lg overflow-hidden">
-          {options.map((opt: string) => (
-            <button
-              key={opt}
-              onClick={() => { onChange(opt); setOpenDropdown(null); }}
-              className={cn(
-                "w-full text-right px-3 py-1.5 text-[11px] font-medium rounded-md transition-all",
-                value === opt ? "bg-blue-50 text-neon-blue" : "text-content-secondary hover:bg-surface-100"
-              )}
-            >
-              {isYear ? (opt === "All" ? "كل السنين" : opt) : REGION_LABELS[opt]}
-            </button>
-          ))}
-        </DropdownContent>
-      </Dropdown>
-    );
-  };
-
   return (
     <div className="card-futuristic p-5 h-full flex flex-col">
       <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -108,30 +75,13 @@ export function AWTopProducts({
         </div>
 
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-1.5 p-1 bg-surface-200/50 rounded-2xl border border-surface-300/50">
-            <LocalFilterDropdown 
-              type="region" 
-              value={localFilter.region} 
-              options={REGIONS} 
-              openKey="region" 
-              onChange={(v: string) => setLocalFilter(p => ({ ...p, region: v }))} 
-            />
-            <LocalFilterDropdown 
-              type="year" 
-              value={localFilter.year} 
-              options={YEARS} 
-              openKey="year" 
-              onChange={(v: string) => setLocalFilter(p => ({ ...p, year: v }))} 
-            />
-            {(localFilter.region !== "All" || localFilter.year !== "All") && (
-              <button
-                onClick={() => setLocalFilter({ year: "All", region: "All" })}
-                className="p-1.5 text-content-tertiary hover:text-red-500 transition-colors"
-              >
-                <X className="size-3.5" />
-              </button>
-            )}
-          </div>
+        <LocalFilterGroup 
+          current={localFilter} 
+          openDropdown={openDropdown} 
+          setOpen={setOpenDropdown} 
+          onChange={(key, val) => setLocalFilter(p => ({ ...p, [key]: val }))} 
+          reset={() => setLocalFilter({ year: "All", region: "All" })} 
+        />
           <button 
             onClick={(e) => {
               e.stopPropagation();

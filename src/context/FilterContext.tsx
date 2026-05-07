@@ -1,5 +1,5 @@
 "use client";
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, { createContext, useContext, useState, ReactNode, useTransition } from "react";
 
 type FilterState = {
   region: string;
@@ -21,13 +21,12 @@ export function FilterProvider({ children }: { children: ReactNode }) {
     year: "All",
     category: "All",
   });
-  const [isPending, setIsPending] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
-  // Sync global pending state for performance
   const updateFilters = (newFilters: React.SetStateAction<FilterState>) => {
-    setIsPending(true);
-    setFilters(newFilters);
-    setTimeout(() => setIsPending(false), 300);
+    startTransition(() => {
+      setFilters(newFilters);
+    });
   };
 
   return (
