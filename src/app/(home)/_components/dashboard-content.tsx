@@ -4,13 +4,40 @@ import dynamic from "next/dynamic";
 import { AWKPICards } from "./kpi-cards";
 import { TerritoriesTable } from "./territories-table";
 
-// Lazy load heavy chart components safely in a Client Component
-const AWTopProducts = dynamic(() => import("./top-products-table").then(mod => mod.AWTopProducts), { ssr: false });
-const AWRevenueChart = dynamic(() => import("./revenue-chart").then(mod => mod.AWRevenueChart), { ssr: false });
-const AWRegionChart = dynamic(() => import("./region-chart").then(mod => mod.AWRegionChart), { ssr: false });
-const AWCustomerChart = dynamic(() => import("./customer-chart").then(mod => mod.AWCustomerChart), { ssr: false });
-const AWYearlyStats = dynamic(() => import("./yearly-stats").then(mod => mod.AWYearlyStats), { ssr: false });
-const SalesQuarterlyChart = dynamic(() => import("./quarterly-chart").then(mod => mod.SalesQuarterlyChart), { ssr: false });
+const ChartSkeleton = ({ height }: { height: string }) => (
+  <div style={{ height }} className="w-full rounded-2xl bg-surface-200 animate-pulse border border-surface-300 flex items-center justify-center">
+    <div className="flex flex-col items-center gap-2">
+      <div className="h-8 w-8 rounded-full border-2 border-neon-blue/20 border-t-neon-blue animate-spin" />
+      <span className="text-[10px] font-bold text-content-tertiary uppercase tracking-widest">جاري التحميل...</span>
+    </div>
+  </div>
+);
+
+// Lazy load heavy chart components safely with skeletons to prevent CLS
+const AWTopProducts = dynamic(() => import("./top-products-table").then(mod => mod.AWTopProducts), { 
+  ssr: false, 
+  loading: () => <ChartSkeleton height="400px" /> 
+});
+const AWRevenueChart = dynamic(() => import("./revenue-chart").then(mod => mod.AWRevenueChart), { 
+  ssr: false, 
+  loading: () => <ChartSkeleton height="450px" /> 
+});
+const AWRegionChart = dynamic(() => import("./region-chart").then(mod => mod.AWRegionChart), { 
+  ssr: false, 
+  loading: () => <ChartSkeleton height="450px" /> 
+});
+const AWCustomerChart = dynamic(() => import("./customer-chart").then(mod => mod.AWCustomerChart), { 
+  ssr: false, 
+  loading: () => <ChartSkeleton height="550px" /> 
+});
+const AWYearlyStats = dynamic(() => import("./yearly-stats").then(mod => mod.AWYearlyStats), { 
+  ssr: false, 
+  loading: () => <ChartSkeleton height="550px" /> 
+});
+const SalesQuarterlyChart = dynamic(() => import("./quarterly-chart").then(mod => mod.SalesQuarterlyChart), { 
+  ssr: false, 
+  loading: () => <ChartSkeleton height="580px" /> 
+});
 
 export function DashboardContent({ data }: { data: any }) {
   const {
