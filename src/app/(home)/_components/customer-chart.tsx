@@ -282,16 +282,16 @@ export function AWCustomerChart({
             </div>
           </div>
           
-          <div className="flex flex-col md:flex-row items-center justify-around gap-6 mt-auto">
-            <div className="relative flex justify-center items-center h-[140px] w-[140px]">
+          <div className="flex flex-col md:flex-row items-center justify-around gap-10 mt-auto py-4">
+            <div className="relative flex justify-center items-center h-[240px] w-[240px]">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
                     data={scaledGender.map(g => ({ name: g.label === "M" ? "رجال" : "سيدات", value: g.count }))}
                     cx="50%"
                     cy="50%"
-                    innerRadius={45}
-                    outerRadius={65}
+                    innerRadius={80}
+                    outerRadius={110}
                     paddingAngle={8}
                     dataKey="value"
                     stroke="none"
@@ -303,24 +303,24 @@ export function AWCustomerChart({
                 </PieChart>
               </ResponsiveContainer>
               <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                <span className="text-[9px] text-content-tertiary uppercase tracking-wider">الإجمالي</span>
-                <span className="text-sm font-bold text-content">
+                <span className="text-[10px] text-content-tertiary uppercase tracking-widest font-bold">الإجمالي</span>
+                <span className="text-2xl font-black text-content">
                   {(genTotal / 1000).toFixed(1)}K
                 </span>
               </div>
             </div>
 
-            <div className="flex flex-col gap-3 min-w-[150px]">
+            <div className="flex flex-col gap-4 min-w-[180px]">
               {scaledGender.map((g, i) => (
-                <div key={g.label} className="bg-surface-300/20 rounded-xl p-2.5 border border-surface-300/50 flex items-center justify-between gap-4">
-                  <div className="flex items-center gap-2">
+                <div key={g.label} className="bg-surface-300/20 rounded-2xl p-4 border border-surface-300/50 flex items-center justify-between gap-6 hover:bg-surface-300/40 transition-all duration-300">
+                  <div className="flex items-center gap-3">
                     <div className={cn(
-                      "h-2 w-2 rounded-full",
+                      "h-3 w-3 rounded-full",
                       i === 0 ? 'bg-neon-pink shadow-glow-pink' : 'bg-neon-blue shadow-glow-blue'
                     )} />
-                    <span className="text-xs font-medium text-content-secondary">{g.label === "M" ? "رجال" : "سيدات"}</span>
+                    <span className="text-sm font-bold text-content-secondary">{g.label === "M" ? "رجال" : "سيدات"}</span>
                   </div>
-                  <div className="text-sm font-bold text-content">
+                  <div className="text-lg font-black text-content">
                     {g.count.toLocaleString()}
                   </div>
                 </div>
