@@ -5,7 +5,7 @@ export const maxDuration = 30;
 export const runtime = 'edge';
 
 function getComprehensiveSummary() {
-  const data = adventureData as unknown as DashboardData & { 
+  const data = adventureData as unknown as DashboardData & {
     customerIncome: { label: string; count: number }[],
     customerGender: { label: string; count: number }[],
     monthly: any[],
@@ -16,7 +16,7 @@ function getComprehensiveSummary() {
     territories: any,
     topProducts: any[]
   };
-  
+
   // Send ALL data - gemini-2.5-flash handles it easily
   return JSON.stringify({
     kpis: data.kpis,
@@ -75,11 +75,11 @@ ${dataSummary}
 - لا تكتب مقدمة ترحيبية أو خاتمة. فقط قدم المعلومات المطلوبة مباشرة.`;
 
 async function callGemini(apiKey: string, contents: any[]): Promise<string> {
-  const maxAttempts = 4;
-  
+  const maxAttempts = 5;
+
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key=${apiKey}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -93,9 +93,20 @@ async function callGemini(apiKey: string, contents: any[]): Promise<string> {
       }
     );
 
+    // Handle rate limits gracefully with longer waits
     if ((response.status === 503 || response.status === 429) && attempt < maxAttempts) {
-      const delay = attempt * 2000; // 2s, 4s, 6s
-      console.log(`[CHAT] Attempt ${attempt}/${maxAttempts} got ${response.status}, retrying in ${delay/1000}s...`);
+      // Parse Google's recommended retry delay if available
+      let delay = attempt * 3000; // 3s, 6s, 9s, 12s
+      try {
+        const errBody = await response.json();
+        const retryInfo = errBody?.error?.details?.find((d: any) => d["@type"]?.includes("RetryInfo"));
+        if (retryInfo?.retryDelay) {
+          const seconds = parseFloat(retryInfo.retryDelay);
+          if (!isNaN(seconds)) delay = Math.ceil(seconds * 1000) + 500;
+        }
+      } catch { /* ignore parse errors */ }
+      
+      console.log(`[CHAT] Attempt ${attempt}/${maxAttempts} got ${response.status}, retrying in ${delay / 1000}s...`);
       await new Promise(resolve => setTimeout(resolve, delay));
       continue;
     }
@@ -103,14 +114,22 @@ async function callGemini(apiKey: string, contents: any[]): Promise<string> {
     if (!response.ok) {
       const errText = await response.text();
       console.error("[CHAT] API Error:", response.status, errText);
+      
+      // Return a friendly Arabic message instead of a raw error
+      if (response.status === 429) {
+        return "⏳ الخدمة مشغولة حالياً بسبب كثرة الطلبات. يرجى الانتظار 30 ثانية ثم المحاولة مرة أخرى.";
+      }
+      if (response.status === 503) {
+        return "⏳ الخدمة غير متاحة مؤقتاً بسبب ضغط عالٍ. يرجى المحاولة بعد قليل.";
+      }
       throw new Error(`API error: ${response.status}`);
     }
 
     const data = await response.json();
     return data?.candidates?.[0]?.content?.parts?.[0]?.text || "عذراً، لم أتمكن من الإجابة.";
   }
-  
-  throw new Error("All attempts failed");
+
+  return "⏳ الخدمة مشغولة حالياً. يرجى الانتظار 30 ثانية ثم المحاولة مرة أخرى.";
 }
 
 export async function POST(req: Request) {
@@ -118,7 +137,7 @@ export async function POST(req: Request) {
   try {
     const { messages } = await req.json();
     const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY || "";
-    
+
     const contents = (messages as any[]).map((m: any) => ({
       role: m.role === "assistant" ? "model" : "user",
       parts: [{ text: String(m.content || "") }],
@@ -127,28 +146,19 @@ export async function POST(req: Request) {
     const text = await callGemini(apiKey, contents);
     console.log(`[CHAT] ✅ Response in ${Date.now() - t0}ms, length: ${text.length}`);
 
-    // Send full response at once - no artificial delays that can cause mobile drops
-    const encoder = new TextEncoder();
-    const stream = new ReadableStream({
-      start(controller) {
-        controller.enqueue(encoder.encode(text));
-        controller.close();
-      },
-    });
-
-    return new Response(stream, {
+    // Send full response at once
+    return new Response(text, {
       headers: {
         "Content-Type": "text/plain; charset=utf-8",
         "Cache-Control": "no-cache",
-        "X-Accel-Buffering": "no",
       },
     });
   } catch (error: unknown) {
     console.error("Chat API Error:", error);
-    const errorMessage = error instanceof Error ? error.message : "Internal Server Error";
-    return new Response(JSON.stringify({ error: errorMessage }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
+    // Return friendly error message instead of JSON error
+    return new Response("⚠️ حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.", {
+      status: 200, // Return 200 so the frontend treats it as a message
+      headers: { "Content-Type": "text/plain; charset=utf-8" },
     });
   }
 }

@@ -19,6 +19,7 @@ export default function AIChatSidebarBox() {
   const [inputValue, setInputValue] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [cooldown, setCooldown] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -27,9 +28,16 @@ export default function AIChatSidebarBox() {
     }
   }, [messages, isLoading]);
 
+  // Cooldown timer to prevent rate limiting
+  useEffect(() => {
+    if (cooldown <= 0) return;
+    const timer = setTimeout(() => setCooldown((c) => c - 1), 1000);
+    return () => clearTimeout(timer);
+  }, [cooldown]);
+
   const handleSend = async () => {
     const val = inputValue.trim();
-    if (!val || isLoading) return;
+    if (!val || isLoading || cooldown > 0) return;
 
     const userMsg: ChatMessage = {
       id: Date.now().toString(),
@@ -42,7 +50,6 @@ export default function AIChatSidebarBox() {
     setIsLoading(true);
 
     try {
-      // Send only the current message for maximum speed
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -51,45 +58,24 @@ export default function AIChatSidebarBox() {
         }),
       });
 
-
-
-      if (!res.ok) {
-        const errData = await res.json().catch(() => null);
-        throw new Error(errData?.error || `HTTP ${res.status}`);
-      }
-
-      // Read the streaming text response
-      const reader = res.body?.getReader();
-      const decoder = new TextDecoder();
+      // Read the full text response (API always returns 200 with text)
+      const text = await res.text();
 
       const assistantMsg: ChatMessage = {
         id: (Date.now() + 1).toString(),
         role: "assistant",
-        content: "",
+        content: text || "عذراً، لم أتمكن من الإجابة.",
       };
 
       setMessages((prev) => [...prev, assistantMsg]);
-
-      if (reader) {
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-          const chunk = decoder.decode(value, { stream: true });
-          assistantMsg.content += chunk;
-          setMessages((prev) =>
-            prev.map((m) =>
-              m.id === assistantMsg.id
-                ? { ...m, content: assistantMsg.content }
-                : m
-            )
-          );
-        }
-      }
+      
+      // Set cooldown to prevent rapid requests that trigger rate limits
+      setCooldown(5);
     } catch (err: any) {
       const errorMsg: ChatMessage = {
         id: (Date.now() + 2).toString(),
         role: "assistant",
-        content: "⚠️ حدث خطأ: " + (err?.message || "مشكلة في الاتصال"),
+        content: "⚠️ حدث خطأ في الاتصال. تأكد من اتصالك بالإنترنت وحاول مرة أخرى.",
       };
       setMessages((prev) => [...prev, errorMsg]);
     } finally {
