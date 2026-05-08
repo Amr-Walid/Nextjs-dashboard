@@ -10,6 +10,8 @@ import { ArrowLeftIcon, ChevronUp } from "./icons";
 import { MenuItem } from "./menu-item";
 import { useSidebarContext } from "./sidebar-context";
 
+import AIChatSidebarBox from "@/components/AI/ai-chat-sidebar-box";
+
 export function Sidebar() {
   const pathname = usePathname();
   const { setIsOpen, isOpen, isMobile, toggleSidebar } = useSidebarContext();
@@ -60,8 +62,6 @@ export function Sidebar() {
           isOpen ? "w-full" : "w-0",
         )}
         aria-label="Main navigation"
-        aria-hidden={!isOpen}
-        inert={!isOpen}
       >
         <div className="flex h-full flex-col overflow-y-auto">
           {/* Logo area */}
@@ -169,8 +169,15 @@ export function Sidebar() {
             ))}
           </div>
 
+          {/* AI Chat Assistant Box */}
+          {!isMobile && (
+            <div className="mt-auto border-t border-surface-300 pt-4">
+              <AIChatSidebarBox />
+            </div>
+          )}
+
           {/* Footer */}
-          <div className="px-5 py-4 mt-auto">
+          <div className="px-5 py-4">
             <p className="text-[10px] font-bold text-content-tertiary text-center uppercase tracking-widest">
               AdventureWorks Analytics v1.0
             </p>
