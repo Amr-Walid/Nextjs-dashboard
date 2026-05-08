@@ -21,25 +21,6 @@ export default function AIChatSidebarBox() {
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // Load messages from localStorage on mount
-  useEffect(() => {
-    const saved = localStorage.getItem("aw_chat_history");
-    if (saved) {
-      try {
-        setMessages(JSON.parse(saved));
-      } catch (e) {
-        console.error("Failed to parse chat history", e);
-      }
-    }
-  }, []);
-
-  // Save messages to localStorage on change
-  useEffect(() => {
-    if (messages.length > 0) {
-      localStorage.setItem("aw_chat_history", JSON.stringify(messages));
-    }
-  }, [messages]);
-
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -61,18 +42,16 @@ export default function AIChatSidebarBox() {
     setIsLoading(true);
 
     try {
-      const allMessages = [...messages, userMsg];
-
+      // Send only the current message for maximum speed
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          messages: allMessages.map((m) => ({
-            role: m.role,
-            content: m.content,
-          })),
+          messages: [{ role: "user", content: val }],
         }),
       });
+
+
 
       if (!res.ok) {
         const errData = await res.json().catch(() => null);

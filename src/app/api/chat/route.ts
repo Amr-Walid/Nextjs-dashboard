@@ -5,6 +5,8 @@ import adventureData from "../../../data/adventureworks.json";
 import { DashboardData } from "@/services/adventureworks.service";
 
 export const maxDuration = 30;
+export const runtime = 'edge';
+
 
 function getComprehensiveSummary() {
   const data = adventureData as unknown as DashboardData & { 
