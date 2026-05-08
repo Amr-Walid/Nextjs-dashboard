@@ -15,22 +15,20 @@ function getComprehensiveSummary() {
     topProducts: any[]
   };
 
-  // Restoring the "optimized" version from commit 0e2698e
   return JSON.stringify({
     kpis: data.kpis,
     yearly: data.yearly,
-    topProducts: data.topProducts?.slice(0, 20).map((p: any) => ({
+    topProducts: data.topProducts?.slice(0, 15).map((p: any) => ({
       name: p.name,
       sales: p.sales,
-      profit: p.profit,
-      qty: p.qty
+      profit: p.profit
     })),
     territories: data.territories,
     demographics: {
       income: data.customerIncome,
       gender: data.customerGender
     },
-    monthlyTrends: data.monthly?.map((m: any) => ({
+    monthlyTrends: data.monthly?.slice(-12).map((m: any) => ({
       m: m.month,
       s: m.sales,
       p: m.profit
@@ -40,65 +38,49 @@ function getComprehensiveSummary() {
 
 const dataSummary = getComprehensiveSummary();
 
-const systemPrompt = `أنت الخبير التقني والمساعد الذكي للوحة تحكم AdventureWorks. 
-لديك وصول كامل وشامل للبيانات التالية بصيغة JSON مضغوطة:
+const systemPrompt = `أنت مساعد ذكي للوحة تحكم AdventureWorks. 
+لديك البيانات التالية:
 ${dataSummary}
 
-قدراتك وصلاحياتك:
-1. تحليل المبيعات (Sales) والأرباح (Profit) عبر السنين والشهور والمناطق.
-2. معرفة تفاصيل المنتجات الأكثر مبيعاً والأكثر ربحية.
-3. تحليل ديموغرافية العملاء (الدخل والنوع).
-4. المقارنة بين أداء المناطق الجغرافية المختلفة.
-
-قواعد الرد:
-- كن دقيقاً جداً في الأرقام (استخدم الأرقام المذكورة في البيانات).
-- قدم تحليلات ذكية (مثلاً: "نلاحظ أن سنة 2007 كانت الأفضل من حيث المبيعات").
-- استخدم لغة عربية احترافية وودودة.
-- اجعل ردودك منظمة باستخدام النقاط أو الجداول البسيطة إذا لزم الأمر.
-- لا تذكر أبداً أنك ترى "بيانات JSON" بل تحدث كخبير يحلل لوحة التحكم مباشرة.`;
+قواعد:
+1. استخدم الأرقام الدقيقة.
+2. اجب بالعربية باختصار (أقل من 150 كلمة).
+3. لا تذكر JSON.`;
 
 async function callGemini(apiKey: string, contents: any[]): Promise<string> {
-  const maxAttempts = 5;
-
+  const maxAttempts = 3;
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key=${apiKey}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          systemInstruction: { parts: [{ text: systemPrompt }] },
-          contents,
-          generationConfig: {
-            maxOutputTokens: 1500,
-          },
-        }),
+    try {
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            systemInstruction: { parts: [{ text: systemPrompt }] },
+            contents,
+            generationConfig: { maxOutputTokens: 1000 },
+          }),
+        }
+      );
+
+      if ((response.status === 503 || response.status === 429) && attempt < maxAttempts) {
+        await new Promise(resolve => setTimeout(resolve, 1500 * attempt));
+        continue;
       }
-    );
 
-    if ((response.status === 503 || response.status === 429) && attempt < maxAttempts) {
-      const delay = attempt * 2000;
-      console.log(`[CHAT] Attempt ${attempt}/${maxAttempts} got ${response.status}, retrying in ${delay / 1000}s...`);
-      await new Promise(resolve => setTimeout(resolve, delay));
-      continue;
+      if (!response.ok) throw new Error(`API error: ${response.status}`);
+      const data = await response.json();
+      return data?.candidates?.[0]?.content?.parts?.[0]?.text || "عذراً، لم أتمكن من الإجابة.";
+    } catch (e) {
+      if (attempt === maxAttempts) throw e;
+      await new Promise(resolve => setTimeout(resolve, 1000));
     }
-
-    if (!response.ok) {
-      const errText = await response.text();
-      console.error("[CHAT] API Error:", response.status, errText);
-      if (response.status === 429) return "⏳ الخدمة مشغولة، يرجى الانتظار قليلاً ثم المحاولة مرة أخرى.";
-      throw new Error(`API error: ${response.status}`);
-    }
-
-    const data = await response.json();
-    return data?.candidates?.[0]?.content?.parts?.[0]?.text || "عذراً، لم أتمكن من الإجابة.";
   }
-
-  return "⏳ الخدمة مشغولة حالياً، يرجى المحاولة لاحقاً.";
+  return "⏳ الخدمة مشغولة، يرجى المحاولة بعد قليل.";
 }
 
 export async function POST(req: Request) {
-  const t0 = Date.now();
   try {
     const { messages } = await req.json();
     const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY || "";
@@ -109,16 +91,27 @@ export async function POST(req: Request) {
     }));
 
     const text = await callGemini(apiKey, contents);
-    console.log(`[CHAT] ✅ Response in ${Date.now() - t0}ms, length: ${text.length}`);
 
-    return new Response(text, {
-      headers: { "Content-Type": "text/plain; charset=utf-8" },
+    // Using a Stream for better mobile stability (keeps connection alive)
+    const encoder = new TextEncoder();
+    const stream = new ReadableStream({
+      start(controller) {
+        const chunkSize = 20;
+        for (let i = 0; i < text.length; i += chunkSize) {
+          controller.enqueue(encoder.encode(text.slice(i, i + chunkSize)));
+        }
+        controller.close();
+      },
     });
-  } catch (error: unknown) {
-    console.error("Chat API Error:", error);
-    return new Response("⚠️ حدث خطأ في الاتصال، يرجى المحاولة مرة أخرى.", {
-      status: 200,
-      headers: { "Content-Type": "text/plain; charset=utf-8" },
+
+    return new Response(stream, {
+      headers: { 
+        "Content-Type": "text/plain; charset=utf-8",
+        "Cache-Control": "no-cache",
+        "Transfer-Encoding": "chunked"
+      },
     });
+  } catch (error: any) {
+    return new Response("⚠️ حدث خطأ في الاتصال، حاول مرة أخرى.", { status: 200 });
   }
 }

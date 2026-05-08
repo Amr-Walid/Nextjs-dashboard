@@ -50,7 +50,6 @@ export default function AIChatSidebarBox() {
     setIsLoading(true);
 
     try {
-      // Send FULL history to the API so it remembers previous context
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -62,16 +61,34 @@ export default function AIChatSidebarBox() {
         }),
       });
 
-      const text = await res.text();
+      const reader = res.body?.getReader();
+      const decoder = new TextDecoder();
 
       const assistantMsg: ChatMessage = {
         id: (Date.now() + 1).toString(),
         role: "assistant",
-        content: text || "عذراً، لم أتمكن من الإجابة.",
+        content: "",
       };
 
       setMessages((prev) => [...prev, assistantMsg]);
-      setCooldown(3); // Shorter cooldown
+
+      if (reader) {
+        let fullText = "";
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          const chunk = decoder.decode(value, { stream: true });
+          fullText += chunk;
+          
+          setMessages((prev) =>
+            prev.map((m) =>
+              m.id === assistantMsg.id ? { ...m, content: fullText } : m
+            )
+          );
+        }
+      }
+      
+      setCooldown(3);
     } catch (err: any) {
       const errorMsg: ChatMessage = {
         id: (Date.now() + 2).toString(),
