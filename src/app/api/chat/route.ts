@@ -4,42 +4,38 @@ import adventureData from "../../../data/adventureworks.json";
 
 export const maxDuration = 30;
 
-function getDataSummary() {
+function getComprehensiveSummary() {
   const data = adventureData as any;
   
-  // Extracting data based on ACTUAL adventureworks.json structure
-  const kpis = data.kpis || {};
-  const topProducts = data.topProducts || [];
-  const territories = data.territories || [];
-  
-  const summary = {
-    overview: {
-      totalSales: kpis.totalSales,
-      totalOrders: kpis.totalOrders,
-      totalCustomers: kpis.totalCustomers,
-      totalProfit: kpis.totalProfit,
-      profitMargin: kpis.profitMargin + "%"
-    },
-    bestSellingProducts: topProducts.slice(0, 5).map((p: any) => ({
+  // Create a highly optimized but COMPREHENSIVE version of the data
+  return JSON.stringify({
+    kpis: data.kpis,
+    // Send all yearly data
+    yearly: data.yearly,
+    // Send top 20 products (instead of 5)
+    topProducts: data.topProducts?.slice(0, 20).map((p: any) => ({
       name: p.name,
       sales: p.sales,
+      profit: p.profit,
       qty: p.qty
     })),
-    topRegions: territories.slice(0, 3).map((t: any) => ({
-      region: t.region,
-      sales: t.sales
-    })),
-    yearlyTrends: data.yearly?.map((y: any) => ({
-      year: y.year,
-      sales: y.sales,
-      profit: y.profit
+    // Send all territories
+    territories: data.territories,
+    // Send demographics
+    demographics: {
+      income: data.customerIncome,
+      gender: data.customerGender
+    },
+    // Send monthly trends but only key metrics to save space
+    monthlyTrends: data.monthly?.map((m: any) => ({
+      m: m.month,
+      s: m.sales,
+      p: m.profit
     }))
-  };
-
-  return JSON.stringify(summary, null, 0);
+  }, null, 0);
 }
 
-const dataSummary = getDataSummary();
+const dataSummary = getComprehensiveSummary();
 
 export async function POST(req: Request) {
   try {
@@ -56,14 +52,22 @@ export async function POST(req: Request) {
 
     const result = streamText({
       model,
-      system: `أنت مساعد ذكي لخبير بيانات. إليك ملخص البيانات الحقيقية للوحة التحكم:
+      system: `أنت الخبير التقني والمساعد الذكي للوحة تحكم AdventureWorks. 
+لديك وصول كامل وشامل للبيانات التالية بصيغة JSON مضغوطة:
 ${dataSummary}
 
-تعليمات:
-1. أجب بدقة بناءً على الأرقام أعلاه.
-2. إذا سألك المستخدم "اهلا" أو ما شابه، رحب به واذكر له ملخصاً سرياً عن المبيعات (مثلاً: إجمالي المبيعات هو 29 مليون).
-3. استخدم العملة (دولار) والنسب المئوية.
-4. الرد يكون باللغة العربية حصراً وبأسلوب احترافي.`,
+قدراتك وصلاحياتك:
+1. تحليل المبيعات (Sales) والأرباح (Profit) عبر السنين والشهور والمناطق.
+2. معرفة تفاصيل المنتجات الأكثر مبيعاً والأكثر ربحية.
+3. تحليل ديموغرافية العملاء (الدخل والنوع).
+4. المقارنة بين أداء المناطق الجغرافية المختلفة.
+
+قواعد الرد:
+- كن دقيقاً جداً في الأرقام (استخدم الأرقام المذكورة في البيانات).
+- قدم تحليلات ذكية (مثلاً: "نلاحظ أن سنة 2007 كانت الأفضل من حيث المبيعات").
+- استخدم لغة عربية احترافية وودودة.
+- اجعل ردودك منظمة باستخدام النقاط أو الجداول البسيطة إذا لزم الأمر.
+- لا تذكر أبداً أنك ترى "بيانات JSON" بل تحدث كخبير يحلل لوحة التحكم مباشرة.`,
       messages: coreMessages,
     });
 
