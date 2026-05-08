@@ -28,6 +28,11 @@ function getDataSummary() {
     topRegions: territories.slice(0, 3).map((t: any) => ({
       region: t.region,
       sales: t.sales
+    })),
+    yearlyTrends: data.yearly?.map((y: any) => ({
+      year: y.year,
+      sales: y.sales,
+      profit: y.profit
     }))
   };
 
