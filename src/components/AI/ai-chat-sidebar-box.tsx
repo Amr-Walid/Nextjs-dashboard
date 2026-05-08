@@ -37,39 +37,30 @@ export default function AIChatSidebarBox() {
       content: val,
     };
 
-    const newMessages = [...messages, userMsg];
-    setMessages(newMessages);
+    setMessages((prev) => [...prev, userMsg]);
     setInputValue("");
     setIsLoading(true);
 
     try {
+      const allMessages = [...messages, userMsg];
+
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          messages: newMessages.map((m) => ({
+          messages: allMessages.map((m) => ({
             role: m.role,
             content: m.content,
           })),
         }),
       });
 
-      const contentType = res.headers.get("Content-Type") || "";
-      if (contentType.includes("text/plain")) {
-        // This is a direct message (usually a fallback or error from our server)
-        const text = await res.text();
-        const assistantMsg: ChatMessage = {
-          id: (Date.now() + 1).toString(),
-          role: "assistant",
-          content: text || "عذراً، الخدمة مشغولة.",
-        };
-        setMessages((prev) => [...prev, assistantMsg]);
-        setCooldown(3);
-        setIsLoading(false);
-        return;
+      if (!res.ok) {
+        const errData = await res.json().catch(() => null);
+        throw new Error(errData?.error || `HTTP ${res.status}`);
       }
 
-      // Otherwise it's an SSE stream
+      // Read the streaming text response
       const reader = res.body?.getReader();
       const decoder = new TextDecoder();
 
@@ -82,34 +73,25 @@ export default function AIChatSidebarBox() {
       setMessages((prev) => [...prev, assistantMsg]);
 
       if (reader) {
-        let fullText = "";
         while (true) {
           const { done, value } = await reader.read();
           if (done) break;
-          
           const chunk = decoder.decode(value, { stream: true });
-          const lines = chunk.split("\n");
-          for (const line of lines) {
-            if (line.startsWith("data: ")) {
-              try {
-                const json = JSON.parse(line.substring(6));
-                const text = json.candidates?.[0]?.content?.parts?.[0]?.text || "";
-                fullText += text;
-                setMessages((prev) =>
-                  prev.map((m) =>
-                    m.id === assistantMsg.id ? { ...m, content: fullText } : m
-                  )
-                );
-              } catch (e) { /* partial chunk */ }
-            }
-          }
+          assistantMsg.content += chunk;
+          setMessages((prev) =>
+            prev.map((m) =>
+              m.id === assistantMsg.id
+                ? { ...m, content: assistantMsg.content }
+                : m
+            )
+          );
         }
       }
     } catch (err: any) {
       const errorMsg: ChatMessage = {
         id: (Date.now() + 2).toString(),
         role: "assistant",
-        content: "⚠️ خطأ في الاتصال.",
+        content: "⚠️ حدث خطأ: " + (err?.message || "مشكلة في الاتصال"),
       };
       setMessages((prev) => [...prev, errorMsg]);
     } finally {
@@ -119,6 +101,7 @@ export default function AIChatSidebarBox() {
 
   return (
     <div className="relative z-[9999] pointer-events-auto flex flex-col h-[400px] mx-3 mb-6 overflow-hidden rounded-2xl border border-surface-300 bg-surface-200/50 backdrop-blur-sm shadow-sm transition-all duration-300 hover:shadow-md">
+      {/* Header */}
       <header className="flex items-center justify-between border-b border-surface-300 px-4 py-3 bg-surface-100">
         <div className="flex items-center gap-2">
           <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-600/10 text-blue-600">
@@ -126,24 +109,60 @@ export default function AIChatSidebarBox() {
           </div>
           <span className="text-[13px] font-bold text-content">مساعد ذكي</span>
         </div>
-        <button onClick={() => setMessages([])} className="p-1.5 text-content-tertiary hover:bg-surface-300 rounded-md">
-          <Trash2 size={14} />
-        </button>
+        <div className="flex items-center gap-1">
+          <button
+            type="button"
+            onClick={() => setMessages([])}
+            className="rounded-md p-1.5 text-content-tertiary hover:bg-surface-300 transition-colors"
+            title="مسح المحادثة"
+          >
+            <Trash2 size={14} />
+          </button>
+        </div>
       </header>
 
-      <div ref={scrollRef} className="flex-1 overflow-y-auto p-3 space-y-4 bg-gradient-to-b from-transparent to-surface-100/30">
+      {/* Chat Messages */}
+      <div
+        ref={scrollRef}
+        className="flex-1 overflow-y-auto p-3 space-y-4 bg-gradient-to-b from-transparent to-surface-100/30"
+      >
         {messages.length === 0 ? (
           <div className="flex h-full flex-col items-center justify-center text-center opacity-60">
             <Bot size={24} className="mb-2 text-blue-600" />
-            <p className="text-[11px] font-medium px-4">أهلاً بك! اسألني عن البيانات.</p>
+            <p className="text-[11px] font-medium leading-relaxed px-4">
+              أهلاً بك! اسألني أي شيء عن بيانات المبيعات والمنتجات.
+            </p>
           </div>
         ) : (
           messages.map((m) => (
-            <div key={m.id} className={cn("flex w-full gap-2", m.role === "user" ? "flex-row-reverse" : "flex-row")}>
-              <div className={cn("flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-white", m.role === "user" ? "bg-blue-600" : "bg-teal-500")}>
-                {m.role === "user" ? <User size={12} /> : <Bot size={12} />}
+            <div
+              key={m.id}
+              className={cn(
+                "flex w-full gap-2",
+                m.role === "user" ? "flex-row-reverse" : "flex-row"
+              )}
+            >
+              <div
+                className={cn(
+                  "flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-white",
+                  m.role === "user" ? "bg-blue-600" : "bg-teal-500"
+                )}
+              >
+                {m.role === "user" ? (
+                  <User size={12} />
+                ) : (
+                  <Bot size={12} />
+                )}
               </div>
-              <div className={cn("max-w-[85%] rounded-xl px-3 py-1.5 text-[12px] leading-relaxed shadow-xs", m.role === "user" ? "bg-blue-600 text-white rounded-tr-none" : "bg-surface-300 text-content rounded-tl-none text-right")} dir="rtl">
+              <div
+                className={cn(
+                  "max-w-[85%] rounded-xl px-3 py-1.5 text-[12px] leading-relaxed shadow-xs",
+                  m.role === "user"
+                    ? "bg-blue-600 text-white rounded-tr-none"
+                    : "bg-surface-300 text-content rounded-tl-none text-right"
+                )}
+                dir="rtl"
+              >
                 {m.role === "user" ? m.content : (
                   <div className="whitespace-pre-wrap">
                     {m.content.split(/(\*\*.*?\*\*)/g).map((part, i) => {
@@ -158,20 +177,53 @@ export default function AIChatSidebarBox() {
             </div>
           ))
         )}
-        {isLoading && messages[messages.length - 1]?.role !== "assistant" && (
-          <div className="flex gap-2">
-            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-teal-500 text-white"><Bot size={12} /></div>
-            <div className="bg-surface-300 rounded-xl rounded-tl-none px-3 py-1.5"><div className="flex gap-1"><div className="h-1 w-1 animate-bounce rounded-full bg-content-tertiary"></div><div className="h-1 w-1 animate-bounce rounded-full bg-content-tertiary" style={{ animationDelay: "0.1s" }}></div><div className="h-1 w-1 animate-bounce rounded-full bg-content-tertiary" style={{ animationDelay: "0.2s" }}></div></div></div>
-          </div>
-        )}
+        {isLoading &&
+          messages[messages.length - 1]?.role !== "assistant" && (
+            <div className="flex gap-2">
+              <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-teal-500 text-white">
+                <Bot size={12} />
+              </div>
+              <div className="bg-surface-300 rounded-xl rounded-tl-none px-3 py-1.5">
+                <div className="flex gap-1">
+                  <div className="h-1.5 w-1.5 animate-bounce rounded-full bg-content-tertiary"></div>
+                  <div
+                    className="h-1.5 w-1.5 animate-bounce rounded-full bg-content-tertiary"
+                    style={{ animationDelay: "0.1s" }}
+                  ></div>
+                  <div
+                    className="h-1.5 w-1.5 animate-bounce rounded-full bg-content-tertiary"
+                    style={{ animationDelay: "0.2s" }}
+                  ></div>
+                </div>
+              </div>
+            </div>
+          )}
       </div>
 
+      {/* Input Area */}
       <div className="p-3 bg-surface-100 border-t border-surface-300">
         <div className="flex items-center gap-2">
-          <button onClick={handleSend} disabled={!inputValue.trim() || isLoading} className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 shadow-sm transition-all">
+          <button
+            type="button"
+            onClick={handleSend}
+            disabled={!inputValue.trim() || isLoading}
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-blue-600 text-white transition-all hover:bg-blue-700 disabled:opacity-50 shadow-sm"
+          >
             <Send size={16} />
           </button>
-          <input value={inputValue} onChange={(e) => setInputValue(e.target.value)} onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && handleSend()} placeholder="اسألني عن البيانات..." className="flex-1 min-w-0 rounded-xl border border-surface-300 bg-surface-base py-2 px-3 text-[13px] outline-none focus:ring-1 focus:ring-blue-500 text-right" dir="rtl" />
+          <input
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                handleSend();
+              }
+            }}
+            placeholder="اسألني عن البيانات..."
+            className="flex-1 min-w-0 rounded-xl border border-surface-300 bg-surface-base py-2 px-3 text-[13px] outline-none focus:ring-1 focus:ring-blue-500 text-right"
+            dir="rtl"
+          />
         </div>
       </div>
     </div>

@@ -1,34 +1,34 @@
+import { createGoogleGenerativeAI } from "@ai-sdk/google";
+import { streamText } from "ai";
 import adventureData from "../../../data/adventureworks.json";
-import { DashboardData } from "@/services/adventureworks.service";
 
 export const maxDuration = 30;
 export const runtime = 'edge';
 
 function getComprehensiveSummary() {
-  const data = adventureData as unknown as DashboardData & {
-    customerIncome: { label: string; count: number }[],
-    customerGender: { label: string; count: number }[],
-    monthly: any[],
-    kpis: any,
-    yearly: any,
-    territories: any,
-    topProducts: any[]
-  };
-
+  const data = adventureData as any;
+  
+  // Create a highly optimized but COMPREHENSIVE version of the data
   return JSON.stringify({
     kpis: data.kpis,
+    // Send all yearly data
     yearly: data.yearly,
-    topProducts: data.topProducts?.slice(0, 15).map((p: any) => ({
+    // Send top 20 products (instead of 5)
+    topProducts: data.topProducts?.slice(0, 20).map((p: any) => ({
       name: p.name,
       sales: p.sales,
-      profit: p.profit
+      profit: p.profit,
+      qty: p.qty
     })),
+    // Send all territories
     territories: data.territories,
+    // Send demographics
     demographics: {
       income: data.customerIncome,
       gender: data.customerGender
     },
-    monthlyTrends: data.monthly?.slice(-12).map((m: any) => ({
+    // Send monthly trends but only key metrics to save space
+    monthlyTrends: data.monthly?.map((m: any) => ({
       m: m.month,
       s: m.sales,
       p: m.profit
@@ -38,71 +38,46 @@ function getComprehensiveSummary() {
 
 const dataSummary = getComprehensiveSummary();
 
-const systemPrompt = `أنت مساعد ذكي للوحة تحكم AdventureWorks. 
-لديك البيانات التالية:
-${dataSummary}
-
-قواعد:
-1. استخدم الأرقام الدقيقة.
-2. اجب بالعربية باختصار (أقل من 150 كلمة).
-3. لا تذكر JSON.`;
-
 export async function POST(req: Request) {
   try {
     const { messages } = await req.json();
     const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY || "";
+    
+    const google = createGoogleGenerativeAI({ apiKey });
+    const model = google("gemini-3.1-flash-lite");
 
-    const contents = (messages as any[]).map((m: any) => ({
-      role: m.role === "assistant" ? "model" : "user",
-      parts: [{ text: String(m.content || "") }],
+    const coreMessages = messages.map((m: any) => ({
+      role: m.role as "user" | "assistant",
+      content: String(m.content || ""),
     }));
 
-    const maxAttempts = 4;
-    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-      const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:streamGenerateContent?alt=sse&key=${apiKey}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            systemInstruction: { parts: [{ text: systemPrompt }] },
-            contents,
-            generationConfig: { maxOutputTokens: 1000 },
-          }),
-        }
-      );
+    const result = streamText({
+      model,
+      system: `أنت الخبير التقني والمساعد الذكي للوحة تحكم AdventureWorks. 
+لديك وصول كامل وشامل للبيانات التالية بصيغة JSON مضغوطة:
+${dataSummary}
 
-      // If it's 503 or 429, retry
-      if ((response.status === 503 || response.status === 429) && attempt < maxAttempts) {
-        console.log(`[CHAT] Attempt ${attempt} failed with ${response.status}. Retrying...`);
-        await new Promise(resolve => setTimeout(resolve, attempt * 1500));
-        continue;
-      }
+قدراتك وصلاحياتك:
+1. تحليل المبيعات (Sales) والأرباح (Profit) عبر السنين والشهور والمناطق.
+2. معرفة تفاصيل المنتجات الأكثر مبيعاً والأكثر ربحية.
+3. تحليل ديموغرافية العملاء (الدخل والنوع).
+4. المقارنة بين أداء المناطق الجغرافية المختلفة.
 
-      if (!response.ok) {
-        // Ultimate failure
-        return new Response("⚠️ الخدمة مشغولة جداً الآن (High Demand). يرجى المحاولة بعد قليل.", { 
-          status: 200, 
-          headers: { "Content-Type": "text/plain; charset=utf-8" } 
-        });
-      }
-
-      // Success! Return the stream
-      return new Response(response.body, {
-        headers: { "Content-Type": "text/event-stream" },
-      });
-    }
-    
-    return new Response("⚠️ تعذر الاتصال بالخدمة.", { 
-      status: 200, 
-      headers: { "Content-Type": "text/plain; charset=utf-8" } 
+قواعد الرد:
+- كن دقيقاً جداً في الأرقام (استخدم الأرقام المذكورة في البيانات).
+- قدم تحليلات ذكية (مثلاً: "نلاحظ أن سنة 2007 كانت الأفضل من حيث المبيعات").
+- استخدم لغة عربية احترافية وودودة.
+- اجعل ردودك منظمة باستخدام النقاط أو الجداول البسيطة إذا لزم الأمر.
+- لا تذكر أبداً أنك ترى "بيانات JSON" بل تحدث كخبير يحلل لوحة التحكم مباشرة.`,
+      messages: coreMessages,
     });
 
+    return result.toTextStreamResponse();
   } catch (error: any) {
     console.error("Chat API Error:", error);
-    return new Response("⚠️ حدث خطأ في الاتصال.", { 
-      status: 200, 
-      headers: { "Content-Type": "text/plain; charset=utf-8" } 
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
     });
   }
 }
