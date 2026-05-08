@@ -106,7 +106,7 @@ export function AWYearlyStats({
         ))}
       </div>
 
-      <div className="h-[250px] w-full mt-auto" dir="ltr">
+      <div className="h-[200px] sm:h-[250px] w-full mt-auto" dir="ltr">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={chartData}
@@ -127,7 +127,7 @@ export function AWYearlyStats({
               tickFormatter={(v) => `$${(v / 1_000_000).toFixed(1)}M`}
             />
             <Tooltip 
-              content={<CustomTooltip formatter={(val: any) => `$${val?.toLocaleString() ?? ""}`} />} 
+              content={<CustomTooltip formatter={(val: number) => `$${val?.toLocaleString() ?? ""}`} />} 
               cursor={{ fill: 'var(--border-default)', opacity: 0.2 }}
             />
             <Bar 

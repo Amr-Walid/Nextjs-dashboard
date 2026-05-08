@@ -120,7 +120,7 @@ export function AWCustomerChart({
             />
           </div>
 
-          <div className="h-[180px] w-full mt-auto" dir="ltr">
+          <div className="h-[150px] sm:h-[180px] w-full mt-auto" dir="ltr">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={scaledIncome} layout="vertical" margin={{ left: 10, right: 20 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border-default)" opacity={0.5} />
@@ -135,7 +135,7 @@ export function AWCustomerChart({
                 />
                 <Tooltip 
                   cursor={false} 
-                  content={<CustomTooltip formatter={(v: any) => `${v.toLocaleString()} عميل`} />} 
+                  content={<CustomTooltip formatter={(v: number) => `${v.toLocaleString()} عميل`} />} 
                 />
                 <Bar dataKey="count" radius={[0, 4, 4, 0]} barSize={12}>
                   {scaledIncome.map((entry, index) => (
@@ -177,8 +177,8 @@ export function AWCustomerChart({
             />
           </div>
           
-          <div className="flex flex-col md:flex-row items-center justify-around gap-10 mt-auto py-4">
-            <div className="relative flex justify-center items-center h-[240px] w-[240px]">
+          <div className="flex flex-col md:flex-row items-center justify-around gap-6 sm:gap-10 mt-auto py-4">
+            <div className="relative flex justify-center items-center h-[180px] w-[180px] sm:h-[240px] sm:w-[240px]">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
@@ -194,7 +194,7 @@ export function AWCustomerChart({
                     <Cell fill="var(--chart-blue)" />
                     <Cell fill="var(--chart-pink)" />
                   </Pie>
-                  <Tooltip content={<CustomTooltip formatter={(v: any) => `${v.toLocaleString()} عميل`} />} />
+                  <Tooltip content={<CustomTooltip formatter={(v: number) => `${v.toLocaleString()} عميل`} />} />
                 </PieChart>
               </ResponsiveContainer>
               <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">

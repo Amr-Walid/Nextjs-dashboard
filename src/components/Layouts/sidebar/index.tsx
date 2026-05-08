@@ -170,11 +170,9 @@ export function Sidebar() {
           </div>
 
           {/* AI Chat Assistant Box */}
-          {!isMobile && (
-            <div className="mt-auto border-t border-surface-300 pt-4">
-              <AIChatSidebarBox />
-            </div>
-          )}
+          <div className="mt-auto border-t border-surface-300 pt-4">
+            <AIChatSidebarBox />
+          </div>
 
           {/* Footer */}
           <div className="px-5 py-4">

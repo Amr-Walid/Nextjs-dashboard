@@ -10,13 +10,18 @@ export function CustomTooltip({
   payload,
   label,
   formatter,
-}: any) {
+}: {
+  active?: boolean;
+  payload?: any[];
+  label?: string;
+  formatter?: (value: number) => string;
+}) {
   if (active && payload && payload.length) {
     return (
       <div className="card-futuristic p-3 min-w-[120px] bg-surface-200/90 backdrop-blur-md border-surface-300">
         {label && <p className="text-content-secondary text-xs mb-2 font-medium">{label}</p>}
         <div className="flex flex-col gap-1.5">
-          {payload.map((entry: any, index: number) => (
+          {payload.map((entry, index) => (
             <div key={`item-${index}`} className="flex items-center gap-2">
               <span
                 className="w-2 h-2 rounded-full shadow-glow-sm"
@@ -24,7 +29,7 @@ export function CustomTooltip({
               />
               <span className="text-content-tertiary text-xs flex-1">{entry.name}:</span>
               <span className="text-content font-bold text-sm">
-                {formatter ? formatter(Number(entry.value)) : entry.value}
+                {formatter ? formatter(Number(entry.value || 0)) : String(entry.value ?? "")}
               </span>
             </div>
           ))}

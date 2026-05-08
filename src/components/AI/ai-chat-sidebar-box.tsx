@@ -21,6 +21,25 @@ export default function AIChatSidebarBox() {
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  // Load messages from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem("aw_chat_history");
+    if (saved) {
+      try {
+        setMessages(JSON.parse(saved));
+      } catch (e) {
+        console.error("Failed to parse chat history", e);
+      }
+    }
+  }, []);
+
+  // Save messages to localStorage on change
+  useEffect(() => {
+    if (messages.length > 0) {
+      localStorage.setItem("aw_chat_history", JSON.stringify(messages));
+    }
+  }, [messages]);
+
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -112,7 +131,10 @@ export default function AIChatSidebarBox() {
         <div className="flex items-center gap-1">
           <button
             type="button"
-            onClick={() => setMessages([])}
+            onClick={() => {
+              setMessages([]);
+              localStorage.removeItem("aw_chat_history");
+            }}
             className="rounded-md p-1.5 text-content-tertiary hover:bg-surface-300 transition-colors"
             title="مسح المحادثة"
           >

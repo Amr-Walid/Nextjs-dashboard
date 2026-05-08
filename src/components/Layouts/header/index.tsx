@@ -11,7 +11,7 @@ export function Header() {
   const { toggleSidebar, isMobile } = useSidebarContext();
 
   return (
-    <header className="sticky top-0 z-30 flex items-center justify-between border-b border-surface-200 bg-white px-4 py-3 md:px-6 2xl:px-10">
+    <header className="sticky top-0 z-30 flex items-center justify-between border-b border-surface-200 bg-white px-3 py-2.5 sm:px-4 sm:py-3 md:px-6 2xl:px-10">
       <div className="flex items-center gap-6">
         <div className="flex items-center gap-3">
           <button

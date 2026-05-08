@@ -91,7 +91,7 @@ export function AWRegionChart({
             ].map((m) => (
               <button
                 key={m.id}
-                onClick={() => setMetric(m.id as any)}
+                onClick={() => setMetric(m.id as "sales" | "profit" | "orders")}
                 className={cn(
                   "px-2.5 py-1 text-[10px] font-bold rounded-md transition-all duration-300",
                   metric === m.id 
@@ -107,7 +107,7 @@ export function AWRegionChart({
       </div>
 
       <div className="flex-1 flex flex-col justify-center">
-        <div className="relative mb-4 flex justify-center items-center h-[200px] sm:h-[220px]">
+        <div className="relative mb-4 flex justify-center items-center h-[180px] sm:h-[220px]">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
@@ -127,7 +127,7 @@ export function AWRegionChart({
                 ))}
               </Pie>
               <Tooltip 
-                content={<CustomTooltip formatter={(val: any) => metric === "orders" ? val.toLocaleString() : `$${val?.toLocaleString() ?? ""}`} />} 
+                content={<CustomTooltip formatter={(val: number) => metric === "orders" ? val.toLocaleString() : `$${val?.toLocaleString() ?? ""}`} />} 
               />
             </PieChart>
           </ResponsiveContainer>

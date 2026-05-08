@@ -98,7 +98,7 @@ export function SalesQuarterlyChart({
         />
       </div>
 
-      <div className="flex-1 min-h-[450px] w-full" dir="ltr">
+      <div className="flex-1 min-h-[350px] sm:min-h-[450px] w-full" dir="ltr">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart 
             data={chartData} 
@@ -125,7 +125,7 @@ export function SalesQuarterlyChart({
             />
             <Tooltip 
               cursor={{ fill: 'var(--border-default)', opacity: 0.1 }}
-              content={<CustomTooltip formatter={(val: any) => `$${val?.toLocaleString() ?? ""}`} />} 
+              content={<CustomTooltip formatter={(val: number) => `$${val?.toLocaleString() ?? ""}`} />} 
             />
             <Bar 
               name="الإيرادات"

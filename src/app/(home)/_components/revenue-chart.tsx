@@ -113,10 +113,10 @@ export function AWRevenueChart({
 
         {/* Filter Tabs */}
         <div className="flex items-center gap-1 p-1 bg-surface-200 rounded-lg border border-surface-300 w-fit h-fit self-end sm:self-center">
-          {[6, 12, 24].map((r) => (
+          {([6, 12, 24] as const).map((r) => (
             <button
               key={r}
-              onClick={() => setRange(r as any)}
+              onClick={() => setRange(r)}
               className={cn(
                 "px-3 py-1.5 text-[11px] font-bold rounded-md transition-all duration-300",
                 range === r 
@@ -130,7 +130,7 @@ export function AWRevenueChart({
         </div>
       </div>
       
-      <div className="h-[250px] sm:h-[310px] w-full" dir="ltr">
+      <div className="h-[220px] sm:h-[310px] w-full" dir="ltr">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart
             data={chartData}
@@ -162,7 +162,7 @@ export function AWRevenueChart({
               tickFormatter={(v) => `$${(v / 1000).toFixed(0)}K`}
             />
             <Tooltip 
-              content={<CustomTooltip formatter={(val: any) => `$${val?.toLocaleString() ?? ""}`} />} 
+              content={<CustomTooltip formatter={(val: number) => `$${val?.toLocaleString() ?? ""}`} />} 
               cursor={{ stroke: 'var(--border-default)', strokeWidth: 1, strokeDasharray: '3 3' }}
             />
             <Area

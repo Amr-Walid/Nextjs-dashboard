@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import dynamic from "next/dynamic";
+import { DashboardData } from "@/services/adventureworks.service";
 import { AWKPICards } from "./kpi-cards";
 import { TerritoriesTable } from "./territories-table";
 
@@ -39,7 +40,7 @@ const SalesQuarterlyChart = dynamic(() => import("./quarterly-chart").then(mod =
   loading: () => <ChartSkeleton height="580px" /> 
 });
 
-export function DashboardContent({ data }: { data: any }) {
+export function DashboardContent({ data }: { data: DashboardData }) {
   const {
     kpis,
     revenueChart,

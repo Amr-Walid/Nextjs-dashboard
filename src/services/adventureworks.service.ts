@@ -83,6 +83,8 @@ export function getDashboardData() {
   };
 }
 
+export type DashboardData = ReturnType<typeof getDashboardData>;
+
 // ── Individual getters (keeping for compatibility if needed) ──
 export const getKPIs = () => awData.kpis as KPIs;
 export const getMonthlyData = () => awData.monthly as MonthlyData[];

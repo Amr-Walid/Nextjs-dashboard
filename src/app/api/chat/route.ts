@@ -2,10 +2,20 @@ import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { streamText } from "ai";
 import adventureData from "../../../data/adventureworks.json";
 
+import { DashboardData } from "@/services/adventureworks.service";
+
 export const maxDuration = 30;
 
 function getComprehensiveSummary() {
-  const data = adventureData as any;
+  const data = adventureData as unknown as DashboardData & { 
+    customerIncome: { label: string; count: number }[],
+    customerGender: { label: string; count: number }[],
+    monthly: any[],
+    kpis: any,
+    yearly: any,
+    territories: any,
+    topProducts: any[]
+  };
   
   // Create a highly optimized but COMPREHENSIVE version of the data
   return JSON.stringify({
@@ -13,7 +23,7 @@ function getComprehensiveSummary() {
     // Send all yearly data
     yearly: data.yearly,
     // Send top 20 products (instead of 5)
-    topProducts: data.topProducts?.slice(0, 20).map((p: any) => ({
+    topProducts: data.topProducts?.slice(0, 20).map((p) => ({
       name: p.name,
       sales: p.sales,
       profit: p.profit,
@@ -27,7 +37,7 @@ function getComprehensiveSummary() {
       gender: data.customerGender
     },
     // Send monthly trends but only key metrics to save space
-    monthlyTrends: data.monthly?.map((m: any) => ({
+    monthlyTrends: data.monthly?.map((m) => ({
       m: m.month,
       s: m.sales,
       p: m.profit
@@ -45,7 +55,7 @@ export async function POST(req: Request) {
     const google = createGoogleGenerativeAI({ apiKey });
     const model = google("gemini-3.1-flash-lite");
 
-    const coreMessages = messages.map((m: any) => ({
+    const coreMessages = (messages as any[]).map((m) => ({
       role: m.role as "user" | "assistant",
       content: String(m.content || ""),
     }));
@@ -72,9 +82,10 @@ ${dataSummary}
     });
 
     return result.toTextStreamResponse();
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Chat API Error:", error);
-    return new Response(JSON.stringify({ error: error.message }), {
+    const errorMessage = error instanceof Error ? error.message : "Internal Server Error";
+    return new Response(JSON.stringify({ error: errorMessage }), {
       status: 500,
       headers: { "Content-Type": "application/json" },
     });
