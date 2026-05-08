@@ -130,9 +130,13 @@ export function AWCustomerChart({
                   type="category"
                   axisLine={false} 
                   tickLine={false} 
-                  tick={{ fill: "var(--text-secondary)", fontSize: 9, fontWeight: 700 }}
-                  width={70}
-                  tickFormatter={(v) => v.replace(" ألف", "ك")}
+                  tick={{ fill: "var(--text-secondary)", fontSize: 8, fontWeight: 700 }}
+                  width={60}
+                  tickFormatter={(v) => 
+                    v.replace("أكثر من ", ">")
+                     .replace("أقل من ", "<")
+                     .replace(" ألف", "ك")
+                  }
                 />
                 <Tooltip 
                   cursor={false} 
