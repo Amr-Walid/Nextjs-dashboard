@@ -55,14 +55,11 @@ export function TerritoriesTable({
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-surface-300">
-              {["الدولة", "المجموعة", "الإيرادات", "الطلبات", "النسبة"].map((h) => (
-                <th
-                  key={h}
-                  className="pb-4 text-right font-bold text-content-tertiary text-xs uppercase tracking-widest"
-                >
-                  {h}
-                </th>
-              ))}
+              <th className="pb-4 text-right font-bold text-content-tertiary text-[10px] uppercase tracking-widest whitespace-nowrap">الدولة</th>
+              <th className="pb-4 text-right font-bold text-content-tertiary text-[10px] uppercase tracking-widest whitespace-nowrap hidden sm:table-cell">المجموعة</th>
+              <th className="pb-4 text-right font-bold text-content-tertiary text-[10px] uppercase tracking-widest whitespace-nowrap">الإيرادات</th>
+              <th className="pb-4 text-right font-bold text-content-tertiary text-[10px] uppercase tracking-widest whitespace-nowrap hidden md:table-cell">الطلبات</th>
+              <th className="pb-4 text-right font-bold text-content-tertiary text-[10px] uppercase tracking-widest whitespace-nowrap">النسبة</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-surface-300/50">
@@ -73,34 +70,34 @@ export function TerritoriesTable({
                   key={t.key}
                   className="transition-colors hover:bg-surface-300/20 group animate-fade-up"
                 >
-                  <td className="py-4 pr-2 font-bold text-content group-hover:text-neon-pink transition-colors">
+                  <td className="py-4 pr-2 font-bold text-content group-hover:text-neon-pink transition-colors whitespace-nowrap">
                     {t.country}
                   </td>
-                  <td className="py-4 pr-2">
+                  <td className="py-4 pr-2 hidden sm:table-cell">
                     <span
                       className={cn(
-                        "rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-tighter",
+                        "rounded-full px-3 py-1 text-[9px] font-black uppercase tracking-tighter whitespace-nowrap",
                         GROUP_COLORS[t.group] || "bg-surface-300 text-content-tertiary"
                       )}
                     >
                       {GROUP_LABELS[t.group] ?? t.group}
                     </span>
                   </td>
-                  <td className="py-4 pr-2 font-black text-neon-blue">
-                    ${(t.sales / 1_000_000).toFixed(2)}M
+                  <td className="py-4 pr-2 font-black text-neon-blue whitespace-nowrap">
+                    ${(t.sales / 1_000_000).toFixed(1)}M
                   </td>
-                  <td className="py-4 pr-2 text-content-secondary font-medium">
+                  <td className="py-4 pr-2 text-content-secondary font-medium hidden md:table-cell whitespace-nowrap">
                     {t.orders.toLocaleString()}
                   </td>
                   <td className="py-4 pr-2">
-                    <div className="flex items-center gap-3">
-                      <div className="flex-1 rounded-full bg-surface-300 h-1.5 min-w-[60px] overflow-hidden">
+                    <div className="flex items-center gap-2">
+                      <div className="hidden xs:flex flex-1 rounded-full bg-surface-300 h-1 min-w-[40px] sm:min-w-[60px] overflow-hidden">
                         <div
                           className="h-full rounded-full bg-neon-pink shadow-glow-pink transition-all duration-1000"
                           style={{ width: `${pct}%` }}
                         />
                       </div>
-                      <span className="text-xs font-bold text-content-tertiary min-w-[35px]">{pct}%</span>
+                      <span className="text-[10px] font-bold text-content-tertiary min-w-[30px]">{pct}%</span>
                     </div>
                   </td>
                 </tr>
