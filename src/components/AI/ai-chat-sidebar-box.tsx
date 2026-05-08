@@ -28,7 +28,6 @@ export default function AIChatSidebarBox() {
     }
   }, [messages, isLoading]);
 
-  // Cooldown timer to prevent rate limiting
   useEffect(() => {
     if (cooldown <= 0) return;
     const timer = setTimeout(() => setCooldown((c) => c - 1), 1000);
@@ -45,20 +44,24 @@ export default function AIChatSidebarBox() {
       content: val,
     };
 
-    setMessages((prev) => [...prev, userMsg]);
+    const newMessages = [...messages, userMsg];
+    setMessages(newMessages);
     setInputValue("");
     setIsLoading(true);
 
     try {
+      // Send FULL history to the API so it remembers previous context
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          messages: [{ role: "user", content: val }],
+          messages: newMessages.map((m) => ({
+            role: m.role,
+            content: m.content,
+          })),
         }),
       });
 
-      // Read the full text response (API always returns 200 with text)
       const text = await res.text();
 
       const assistantMsg: ChatMessage = {
@@ -68,14 +71,12 @@ export default function AIChatSidebarBox() {
       };
 
       setMessages((prev) => [...prev, assistantMsg]);
-      
-      // Set cooldown to prevent rapid requests that trigger rate limits
-      setCooldown(5);
+      setCooldown(3); // Shorter cooldown
     } catch (err: any) {
       const errorMsg: ChatMessage = {
         id: (Date.now() + 2).toString(),
         role: "assistant",
-        content: "⚠️ حدث خطأ في الاتصال. تأكد من اتصالك بالإنترنت وحاول مرة أخرى.",
+        content: "⚠️ حدث خطأ في الاتصال. حاول مرة أخرى.",
       };
       setMessages((prev) => [...prev, errorMsg]);
     } finally {
@@ -85,7 +86,6 @@ export default function AIChatSidebarBox() {
 
   return (
     <div className="relative z-[9999] pointer-events-auto flex flex-col h-[400px] mx-3 mb-6 overflow-hidden rounded-2xl border border-surface-300 bg-surface-200/50 backdrop-blur-sm shadow-sm transition-all duration-300 hover:shadow-md">
-      {/* Header */}
       <header className="flex items-center justify-between border-b border-surface-300 px-4 py-3 bg-surface-100">
         <div className="flex items-center gap-2">
           <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-600/10 text-blue-600">
@@ -96,10 +96,7 @@ export default function AIChatSidebarBox() {
         <div className="flex items-center gap-1">
           <button
             type="button"
-            onClick={() => {
-              setMessages([]);
-              localStorage.removeItem("aw_chat_history");
-            }}
+            onClick={() => setMessages([])}
             className="rounded-md p-1.5 text-content-tertiary hover:bg-surface-300 transition-colors"
             title="مسح المحادثة"
           >
@@ -108,7 +105,6 @@ export default function AIChatSidebarBox() {
         </div>
       </header>
 
-      {/* Chat Messages */}
       <div
         ref={scrollRef}
         className="flex-1 overflow-y-auto p-3 space-y-4 bg-gradient-to-b from-transparent to-surface-100/30"
@@ -169,27 +165,20 @@ export default function AIChatSidebarBox() {
               <div className="bg-surface-300 rounded-xl rounded-tl-none px-3 py-1.5">
                 <div className="flex gap-1">
                   <div className="h-1.5 w-1.5 animate-bounce rounded-full bg-content-tertiary"></div>
-                  <div
-                    className="h-1.5 w-1.5 animate-bounce rounded-full bg-content-tertiary"
-                    style={{ animationDelay: "0.1s" }}
-                  ></div>
-                  <div
-                    className="h-1.5 w-1.5 animate-bounce rounded-full bg-content-tertiary"
-                    style={{ animationDelay: "0.2s" }}
-                  ></div>
+                  <div className="h-1.5 w-1.5 animate-bounce rounded-full bg-content-tertiary" style={{ animationDelay: "0.1s" }}></div>
+                  <div className="h-1.5 w-1.5 animate-bounce rounded-full bg-content-tertiary" style={{ animationDelay: "0.2s" }}></div>
                 </div>
               </div>
             </div>
           )}
       </div>
 
-      {/* Input Area */}
       <div className="p-3 bg-surface-100 border-t border-surface-300">
         <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={handleSend}
-            disabled={!inputValue.trim() || isLoading}
+            disabled={!inputValue.trim() || isLoading || cooldown > 0}
             className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-blue-600 text-white transition-all hover:bg-blue-700 disabled:opacity-50 shadow-sm"
           >
             <Send size={16} />
@@ -203,7 +192,7 @@ export default function AIChatSidebarBox() {
                 handleSend();
               }
             }}
-            placeholder="اسألني عن البيانات..."
+            placeholder={cooldown > 0 ? `انتظر ${cooldown}ث...` : "اسألني عن البيانات..."}
             className="flex-1 min-w-0 rounded-xl border border-surface-300 bg-surface-base py-2 px-3 text-[13px] outline-none focus:ring-1 focus:ring-blue-500 text-right"
             dir="rtl"
           />

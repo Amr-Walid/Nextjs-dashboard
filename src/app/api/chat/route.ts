@@ -9,70 +9,53 @@ function getComprehensiveSummary() {
     customerIncome: { label: string; count: number }[],
     customerGender: { label: string; count: number }[],
     monthly: any[],
-    quarterly: any[],
-    groups: any[],
     kpis: any,
     yearly: any,
     territories: any,
     topProducts: any[]
   };
 
-  // Send ALL data - gemini-2.5-flash handles it easily
+  // Restoring the "optimized" version from commit 0e2698e
   return JSON.stringify({
     kpis: data.kpis,
     yearly: data.yearly,
-    // All products with full details
-    topProducts: data.topProducts?.map((p) => ({
+    topProducts: data.topProducts?.slice(0, 20).map((p: any) => ({
       name: p.name,
       sales: p.sales,
       profit: p.profit,
-      profitMargin: p.profitMargin,
-      qty: p.qty,
-      orders: p.orders,
+      qty: p.qty
     })),
-    // All territories with full details
     territories: data.territories,
-    // Regional groups
-    groups: data.groups,
-    // Demographics
     demographics: {
       income: data.customerIncome,
       gender: data.customerGender
     },
-    // Monthly trends (all months)
-    monthly: data.monthly?.map((m) => ({
-      month: m.month,
-      sales: m.sales,
-      profit: m.profit,
-      orders: m.orders,
-      qty: m.qty,
-    })),
-    // Quarterly data
-    quarterly: data.quarterly,
+    monthlyTrends: data.monthly?.map((m: any) => ({
+      m: m.month,
+      s: m.sales,
+      p: m.profit
+    }))
   }, null, 0);
 }
 
 const dataSummary = getComprehensiveSummary();
 
 const systemPrompt = `أنت الخبير التقني والمساعد الذكي للوحة تحكم AdventureWorks. 
-لديك وصول كامل وشامل لجميع البيانات التالية:
+لديك وصول كامل وشامل للبيانات التالية بصيغة JSON مضغوطة:
 ${dataSummary}
 
 قدراتك وصلاحياتك:
-1. تحليل المبيعات (Sales) والأرباح (Profit) عبر السنين والشهور والأرباع والمناطق.
-2. معرفة تفاصيل جميع المنتجات (الأسعار، المبيعات، الأرباح، هوامش الربح، الكميات).
-3. تحليل ديموغرافية العملاء (توزيع الدخل والنوع).
-4. المقارنة بين أداء المناطق الجغرافية والمجموعات (أمريكا الشمالية، أوروبا، المحيط الهادئ).
-5. تحليل الاتجاهات الشهرية والفصلية ومعدلات النمو.
+1. تحليل المبيعات (Sales) والأرباح (Profit) عبر السنين والشهور والمناطق.
+2. معرفة تفاصيل المنتجات الأكثر مبيعاً والأكثر ربحية.
+3. تحليل ديموغرافية العملاء (الدخل والنوع).
+4. المقارنة بين أداء المناطق الجغرافية المختلفة.
 
 قواعد الرد:
-- كن دقيقاً جداً في الأرقام (استخدم الأرقام من البيانات).
-- قدم تحليلات ذكية ومقارنات عند الحاجة.
+- كن دقيقاً جداً في الأرقام (استخدم الأرقام المذكورة في البيانات).
+- قدم تحليلات ذكية (مثلاً: "نلاحظ أن سنة 2007 كانت الأفضل من حيث المبيعات").
 - استخدم لغة عربية احترافية وودودة.
-- نظم ردودك باستخدام النقاط أو الجداول البسيطة إذا لزم الأمر.
-- !!مهم جداً!! اجعل ردودك مختصرة ومركزة (لا تتجاوز 150 كلمة). ادخل في الموضوع مباشرة بدون مقدمات طويلة.
-- لا تذكر أبداً أنك ترى "بيانات JSON" بل تحدث كخبير يحلل لوحة التحكم مباشرة.
-- لا تكتب مقدمة ترحيبية أو خاتمة. فقط قدم المعلومات المطلوبة مباشرة.`;
+- اجعل ردودك منظمة باستخدام النقاط أو الجداول البسيطة إذا لزم الأمر.
+- لا تذكر أبداً أنك ترى "بيانات JSON" بل تحدث كخبير يحلل لوحة التحكم مباشرة.`;
 
 async function callGemini(apiKey: string, contents: any[]): Promise<string> {
   const maxAttempts = 5;
@@ -93,19 +76,8 @@ async function callGemini(apiKey: string, contents: any[]): Promise<string> {
       }
     );
 
-    // Handle rate limits gracefully with longer waits
     if ((response.status === 503 || response.status === 429) && attempt < maxAttempts) {
-      // Parse Google's recommended retry delay if available
-      let delay = attempt * 3000; // 3s, 6s, 9s, 12s
-      try {
-        const errBody = await response.json();
-        const retryInfo = errBody?.error?.details?.find((d: any) => d["@type"]?.includes("RetryInfo"));
-        if (retryInfo?.retryDelay) {
-          const seconds = parseFloat(retryInfo.retryDelay);
-          if (!isNaN(seconds)) delay = Math.ceil(seconds * 1000) + 500;
-        }
-      } catch { /* ignore parse errors */ }
-      
+      const delay = attempt * 2000;
       console.log(`[CHAT] Attempt ${attempt}/${maxAttempts} got ${response.status}, retrying in ${delay / 1000}s...`);
       await new Promise(resolve => setTimeout(resolve, delay));
       continue;
@@ -114,14 +86,7 @@ async function callGemini(apiKey: string, contents: any[]): Promise<string> {
     if (!response.ok) {
       const errText = await response.text();
       console.error("[CHAT] API Error:", response.status, errText);
-      
-      // Return a friendly Arabic message instead of a raw error
-      if (response.status === 429) {
-        return "⏳ الخدمة مشغولة حالياً بسبب كثرة الطلبات. يرجى الانتظار 30 ثانية ثم المحاولة مرة أخرى.";
-      }
-      if (response.status === 503) {
-        return "⏳ الخدمة غير متاحة مؤقتاً بسبب ضغط عالٍ. يرجى المحاولة بعد قليل.";
-      }
+      if (response.status === 429) return "⏳ الخدمة مشغولة، يرجى الانتظار قليلاً ثم المحاولة مرة أخرى.";
       throw new Error(`API error: ${response.status}`);
     }
 
@@ -129,7 +94,7 @@ async function callGemini(apiKey: string, contents: any[]): Promise<string> {
     return data?.candidates?.[0]?.content?.parts?.[0]?.text || "عذراً، لم أتمكن من الإجابة.";
   }
 
-  return "⏳ الخدمة مشغولة حالياً. يرجى الانتظار 30 ثانية ثم المحاولة مرة أخرى.";
+  return "⏳ الخدمة مشغولة حالياً، يرجى المحاولة لاحقاً.";
 }
 
 export async function POST(req: Request) {
@@ -146,18 +111,13 @@ export async function POST(req: Request) {
     const text = await callGemini(apiKey, contents);
     console.log(`[CHAT] ✅ Response in ${Date.now() - t0}ms, length: ${text.length}`);
 
-    // Send full response at once
     return new Response(text, {
-      headers: {
-        "Content-Type": "text/plain; charset=utf-8",
-        "Cache-Control": "no-cache",
-      },
+      headers: { "Content-Type": "text/plain; charset=utf-8" },
     });
   } catch (error: unknown) {
     console.error("Chat API Error:", error);
-    // Return friendly error message instead of JSON error
-    return new Response("⚠️ حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.", {
-      status: 200, // Return 200 so the frontend treats it as a message
+    return new Response("⚠️ حدث خطأ في الاتصال، يرجى المحاولة مرة أخرى.", {
+      status: 200,
       headers: { "Content-Type": "text/plain; charset=utf-8" },
     });
   }
