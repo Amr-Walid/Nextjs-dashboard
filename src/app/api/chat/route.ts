@@ -70,7 +70,9 @@ ${dataSummary}
 - قدم تحليلات ذكية ومقارنات عند الحاجة.
 - استخدم لغة عربية احترافية وودودة.
 - نظم ردودك باستخدام النقاط أو الجداول البسيطة إذا لزم الأمر.
-- لا تذكر أبداً أنك ترى "بيانات JSON" بل تحدث كخبير يحلل لوحة التحكم مباشرة.`;
+- !!مهم جداً!! اجعل ردودك مختصرة ومركزة (لا تتجاوز 150 كلمة). ادخل في الموضوع مباشرة بدون مقدمات طويلة.
+- لا تذكر أبداً أنك ترى "بيانات JSON" بل تحدث كخبير يحلل لوحة التحكم مباشرة.
+- لا تكتب مقدمة ترحيبية أو خاتمة. فقط قدم المعلومات المطلوبة مباشرة.`;
 
 async function callGemini(apiKey: string, contents: any[]): Promise<string> {
   const maxAttempts = 4;
@@ -85,7 +87,7 @@ async function callGemini(apiKey: string, contents: any[]): Promise<string> {
           systemInstruction: { parts: [{ text: systemPrompt }] },
           contents,
           generationConfig: {
-            maxOutputTokens: 800,
+            maxOutputTokens: 1500,
           },
         }),
       }
@@ -125,15 +127,11 @@ export async function POST(req: Request) {
     const text = await callGemini(apiKey, contents);
     console.log(`[CHAT] ✅ Response in ${Date.now() - t0}ms, length: ${text.length}`);
 
-    // Stream the response in chunks for a smooth typing effect
+    // Send full response at once - no artificial delays that can cause mobile drops
     const encoder = new TextEncoder();
     const stream = new ReadableStream({
-      async start(controller) {
-        const chunkSize = 5;
-        for (let i = 0; i < text.length; i += chunkSize) {
-          controller.enqueue(encoder.encode(text.slice(i, i + chunkSize)));
-          await new Promise(resolve => setTimeout(resolve, 8));
-        }
+      start(controller) {
+        controller.enqueue(encoder.encode(text));
         controller.close();
       },
     });
