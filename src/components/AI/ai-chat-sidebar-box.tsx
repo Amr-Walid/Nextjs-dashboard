@@ -144,7 +144,16 @@ export default function AIChatSidebarBox() {
                 {m.role === "user" ? <User size={12} /> : <Bot size={12} />}
               </div>
               <div className={cn("max-w-[85%] rounded-xl px-3 py-1.5 text-[12px] leading-relaxed shadow-xs", m.role === "user" ? "bg-blue-600 text-white rounded-tr-none" : "bg-surface-300 text-content rounded-tl-none text-right")} dir="rtl">
-                {m.content}
+                {m.role === "user" ? m.content : (
+                  <div className="whitespace-pre-wrap">
+                    {m.content.split(/(\*\*.*?\*\*)/g).map((part, i) => {
+                      if (part.startsWith("**") && part.endsWith("**")) {
+                        return <strong key={i} className="font-extrabold text-blue-900 dark:text-blue-200">{part.slice(2, -2)}</strong>;
+                      }
+                      return part;
+                    })}
+                  </div>
+                )}
               </div>
             </div>
           ))
