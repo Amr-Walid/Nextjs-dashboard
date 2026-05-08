@@ -112,16 +112,17 @@ export function SalesQuarterlyChart({
               tickLine={false} 
               axisLine={false} 
               tick={{ fill: "var(--text-tertiary)", fontSize: 10, fontWeight: 600 }}
-              tickFormatter={(v) => `$${(v / 1_000_000).toFixed(1)}M`}
+              tickFormatter={(v) => `$${(v / 1_000_000).toFixed(0)}M`}
             />
             <YAxis 
               dataKey="quarter" 
               type="category"
               tickLine={false} 
               axisLine={false} 
-              tick={{ fill: "var(--text-tertiary)", fontSize: 10, fontWeight: 700 }}
-              width={110}
+              tick={{ fill: "var(--text-tertiary)", fontSize: 9, fontWeight: 700 }}
+              width={70}
               interval={0}
+              tickFormatter={(v) => v.replace("الربع ", "ر")}
             />
             <Tooltip 
               cursor={{ fill: 'var(--border-default)', opacity: 0.1 }}

@@ -130,8 +130,9 @@ export function AWCustomerChart({
                   type="category"
                   axisLine={false} 
                   tickLine={false} 
-                  tick={{ fill: "var(--text-secondary)", fontSize: 10, fontWeight: 700 }}
-                  width={100}
+                  tick={{ fill: "var(--text-secondary)", fontSize: 9, fontWeight: 700 }}
+                  width={70}
+                  tickFormatter={(v) => v.replace(" ألف", "ك")}
                 />
                 <Tooltip 
                   cursor={false} 
@@ -185,8 +186,8 @@ export function AWCustomerChart({
                     data={scaledGender.map(g => ({ name: g.label, value: g.count }))}
                     cx="50%"
                     cy="50%"
-                    innerRadius={80}
-                    outerRadius={110}
+                    innerRadius="65%"
+                    outerRadius="85%"
                     paddingAngle={8}
                     dataKey="value"
                     stroke="none"
@@ -207,7 +208,7 @@ export function AWCustomerChart({
 
             <div className="flex flex-col gap-4 min-w-[180px]">
               {scaledGender.map((g, i) => (
-                <div key={g.label} className="bg-surface-200 rounded-2xl p-4 border border-surface-300/50 flex items-center justify-between gap-6 hover:bg-surface-300 transition-all duration-300">
+                <div key={g.label} className="bg-surface-200 rounded-2xl p-3 sm:p-4 border border-surface-300/50 flex items-center justify-between gap-3 sm:gap-6 hover:bg-surface-300 transition-all duration-300">
                   <div className="flex items-center gap-3">
                     <div className={cn(
                       "h-3 w-3 rounded-full",
